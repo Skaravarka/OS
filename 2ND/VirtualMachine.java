@@ -7,8 +7,13 @@ public class VirtualMachine {
     private int sf;
     private int mp;
 
-    public VirtualMachine(int loaded, int pc, int sp, int ptr){
-
+    public VirtualMachine(int loaded, int ax, int bx, int cc, int sf, int mp){
+        this.loaded = loaded;
+        this.ax = ax;
+        this.bx = bx;
+        this.cc = cc;
+        this.sf = sf;
+        this.mp = mp;
     }
 
     public int getLoaded(){
