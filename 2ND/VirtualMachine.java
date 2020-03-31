@@ -1,4 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class VirtualMachine {
 
@@ -11,7 +14,7 @@ public class VirtualMachine {
     private int sf;
     private int mp;
 
-    public VirtualMachine(int loaded, int ax, int bx, int cc, int sf, int mp){
+    public VirtualMachine(int loaded, int ax, int bx, int cc, int sf, int mp) {
         setClearMemory();
 
         this.loaded = loaded;
@@ -20,6 +23,22 @@ public class VirtualMachine {
         this.cc = cc;
         this.sf = sf;
         this.mp = mp;
+    }
+
+    public void loadToMemory(String fileName) {
+        File file = new File(fileName);
+        Scanner scanner;
+        try {
+            scanner = new Scanner(file);
+            while(scanner.hasNextLine()){
+                String data = scanner.nextLine();
+                System.out.println(data);
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            
+            e.printStackTrace();
+        }
     }
 
     private void setClearMemory(){
