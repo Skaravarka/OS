@@ -69,6 +69,111 @@ public class VirtualMachine {
         }
     }
 
+    public void DoNextInstruction(){
+        String string = "";
+
+        if (string.contains("END"))
+        {
+            return;
+        }
+        if (string.contains("ADD "))
+        {
+            ADD();
+            return;
+        }
+        if (string.contains("SUB "))
+        {
+            SUB();
+            return;
+        }
+        if (string.contains("MOR "))
+        {
+            MOR();
+            return;
+        }
+        if (string.contains("EQL "))
+        {
+            EQL();
+            return;
+        }
+        if (string.contains("MOV "))
+        {
+            MOV();
+            return;
+        }
+        if (string.contains("LEA "))
+        {
+            LEA();
+            return;
+        }
+        if (string.contains("GET "))
+        {
+            GET();
+            return;
+        }
+        if (string.contains("PRR "))
+        {
+            PRR();
+            return;
+        }
+        if (string.contains("PRS "))
+        {
+            PRS();
+            return;
+        }
+        if (string.contains("WGD "))
+        {
+            WGD();
+            return;
+        }
+        if (string.contains("RGD "))
+        {
+            RGD();
+            return;
+        }
+        if (string.contains("LGD "))
+        {
+            LGD();
+            return;
+        }
+        if (string.contains("UGD "))
+        {
+            UGD();
+            return;
+        }
+        if (string.contains("JMP "))
+        {
+            JMP();
+            return;
+        }
+        if (string.contains("JEZ "))
+        {
+            JEZ();
+            return;
+        }
+        if (string.contains("JNZ "))
+        {
+            JNZ();
+            return;
+        }
+        if (string.contains("JGZ "))
+        {
+            JGZ();
+            return;
+        }
+        if (string.contains("JLZ "))
+        {
+            JLZ();
+            return;
+        }
+        if (string.contains("END "))
+        {
+            END();
+            return;
+        }
+        System.out.println("Kaska neto ivedei");
+    }
+
     public int getLoaded(){
         return loaded;
     }
