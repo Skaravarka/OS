@@ -83,4 +83,81 @@ public class VirtualMachine {
     public void setMp(int mp){
         this.mp = mp;
     }
+
+    //Aritmetines komandos
+    private void ADD(){
+
+    }
+
+    private void SUB(){
+
+    }
+    //Palyginimo komandos
+    private void MOR(){
+
+    }
+
+    private void EQL(){
+
+    }
+    //Darbui su atmintimi komandos
+    private void MOV(){
+
+    }
+
+    private void LEA(){
+
+    }
+    //Ivedimo/Isvedimo komandos
+    private void GET(){
+
+    }
+
+    private void PRR(){
+
+    }
+
+    private void PRS(){
+
+    }
+    //Darbo su bendra atminties sritimi komandos
+    private void WGD(){
+
+    }
+
+    private void RGD(){
+
+    }
+    //Semaforu komandos
+    private void LGD(){
+
+    }
+
+    private void UGD(){
+
+    }
+    //Salyginiai ir besalyginiai valdymo perdavimai komandos
+    private void JMP(){
+
+    }
+
+    private void JEZ(){
+
+    }
+
+    private void JNZ(){
+
+    }
+
+    private void JGZ(){
+
+    }
+
+    private void JLZ(){
+
+    }
+    //Besalyginio programos sustabdymo komandos
+    private void END(){
+
+    }
 }
