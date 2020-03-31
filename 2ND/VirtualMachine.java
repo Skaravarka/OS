@@ -28,11 +28,33 @@ public class VirtualMachine {
     public void loadToMemory(String fileName) {
         File file = new File(fileName);
         Scanner scanner;
+        int segmentFlag = 0; //DATA CODE HALT
         try {
             scanner = new Scanner(file);
             while(scanner.hasNextLine()){
                 String data = scanner.nextLine();
-                System.out.println(data);
+                data.toUpperCase();
+                
+                if(data == "DATA"){
+                    segmentFlag = 1;
+                    continue;
+                }
+                if(data == "CODE"){
+                    segmentFlag = 2;
+                    continue;
+                }
+                if(data == "HALT"){
+                    scanner.close();
+                    return;
+                }
+                if(segmentFlag == 1){
+
+                }
+                if(segmentFlag == 2){
+
+                }
+                
+
             }
             scanner.close();
         } catch (FileNotFoundException e) {
