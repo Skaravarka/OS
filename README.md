@@ -1,2 +1,2 @@
 # OS
-Antras Os nd
+Osu rep
