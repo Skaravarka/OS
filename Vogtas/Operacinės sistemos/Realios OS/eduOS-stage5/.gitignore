@@ -1,8 +1,0 @@
-*.o
-*.dep
-*~
-*.elf
-*.sym
-documentation/html/
-include/eduos/config.h
-include/eduos/config.inc
