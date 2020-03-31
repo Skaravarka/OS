@@ -3,6 +3,10 @@ public class Main {
     public static void main(String[] args) {
         // Prints "Hello, World" to the terminal window.
         System.out.println("Hello, World");
+
+        VirtualMachine virtualMachine = new VirtualMachine(0, 0, 0, 0, 0, 0);
+
+        
     }
 
 }

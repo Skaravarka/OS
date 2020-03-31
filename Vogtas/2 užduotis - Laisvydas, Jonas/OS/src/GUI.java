@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
-import javax.xml.bind.DatatypeConverter;
 
 
 public class GUI extends javax.swing.JFrame {

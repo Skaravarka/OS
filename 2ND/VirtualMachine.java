@@ -1,4 +1,8 @@
+import java.util.ArrayList;
+
 public class VirtualMachine {
+
+    private ArrayList<Word> virtualMemory = new ArrayList<Word>();
 
     private int loaded;
     private int ax;
@@ -8,12 +12,20 @@ public class VirtualMachine {
     private int mp;
 
     public VirtualMachine(int loaded, int ax, int bx, int cc, int sf, int mp){
+        setClearMemory();
+
         this.loaded = loaded;
         this.ax = ax;
         this.bx = bx;
         this.cc = cc;
         this.sf = sf;
         this.mp = mp;
+    }
+
+    private void setClearMemory(){
+        for(int i = 0; i < 256; i++){
+            virtualMemory.add(new Word());
+        }
     }
 
     public int getLoaded(){
