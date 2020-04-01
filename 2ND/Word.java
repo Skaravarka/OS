@@ -57,4 +57,29 @@ public class Word {
         }
         return word;
     }
+    public static Word stringToWord(String string){
+        Word tempWord = new Word();
+        int ascii = 0;
+        if(string.length() > SIZE){
+            System.out.println("Error");     
+        }
+        for(int i = 0; i < SIZE; i++){
+            ascii = ascii * 100;
+            ascii = ascii + (int) string.charAt(i);
+        }
+        tempWord = Word.intToWord(ascii);
+        //System.out.println(ascii);
+        //System.out.println(Word.wordToInt(tempWord));
+        return tempWord;
+    }
+    public static String wordToString(Word word){
+        String tempString = "";
+        int tempInt = Word.wordToInt(word);
+        String temp = Integer.toString(tempInt);
+        for(int i = 0; i < SIZE * 2; i = i + 2){
+            int k = Integer.parseInt(temp.substring(i, i+2));
+            tempString += Character.toString ((char) k); 
+        }
+        return tempString;
+    }
 }

@@ -34,29 +34,33 @@ public class VirtualMachine {
             while(scanner.hasNextLine()){
                 String data = scanner.nextLine();
                 data.toUpperCase();
-                
-                if(data == "DATA"){
+                //System.out.println(data);
+                if(data.equals("DATA")){
                     segmentFlag = 1;
                     continue;
                 }
-                if(data == "CODE"){
+                if(data.equals("CODE")){
                     segmentFlag = 2;
                     continue;
                 }
-                if(data == "HALT"){
+                if(data.equals("HALT")){
                     scanner.close();
                     return -1;
                 }
                 if(segmentFlag == 1){
-
+                    System.out.println(data);
+                    String[] parts = data.split(" ");
+                    //virtualMemory.set(Integer.parseInt(parts[1]), parts[2]);
+                    //System.out.println("final" + Word.wordToString(Word.stringToWord("ABCD")));
                 }
                 if(segmentFlag == 2){
 
                 }
-                return -1;
 
             }
             scanner.close();
+            return -1;
+
         } catch (FileNotFoundException e) {
             
             e.printStackTrace();
