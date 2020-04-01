@@ -76,7 +76,7 @@ public class Word {
         String tempString = "";
         int tempInt = Word.wordToInt(word);
         String temp = Integer.toString(tempInt);
-        for(int i = 0; i < SIZE * 2; i = i + 2){
+        for(int i = 0; i < temp.length(); i = i + 2){
             int k = Integer.parseInt(temp.substring(i, i+2));
             tempString += Character.toString ((char) k); 
         }

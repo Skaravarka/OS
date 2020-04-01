@@ -24,6 +24,11 @@ public class VirtualMachine {
         this.sf = sf;
         this.mp = mp;
     }
+    public void printVirtualMemory(){
+        for(int i = 0; i < 256; i++){
+            System.out.println(i + " " + Word.wordToString(virtualMemory.get(i)));
+        }
+    }
 
     public int loadToMemory(String fileName) {
         File file = new File(fileName);
@@ -48,9 +53,12 @@ public class VirtualMachine {
                     return -1;
                 }
                 if(segmentFlag == 1){
-                    System.out.println(data);
+                    //System.out.println(data);
                     String[] parts = data.split(" ");
-                    //virtualMemory.set(Integer.parseInt(parts[1]), parts[2]);
+                    while(parts[1].length() != 4){
+                        parts[1] = " " + parts[1];
+                    }
+                    virtualMemory.set(Integer.parseInt(parts[0]), Word.stringToWord(parts[1]));
                     //System.out.println("final" + Word.wordToString(Word.stringToWord("ABCD")));
                 }
                 if(segmentFlag == 2){
@@ -70,7 +78,9 @@ public class VirtualMachine {
 
     private void setClearMemory(){
         for(int i = 0; i < 256; i++){
-            virtualMemory.add(new Word());
+            Word word = new Word();
+            word = Word.stringToWord("0000");
+            virtualMemory.add(word);
         }
     }
 
