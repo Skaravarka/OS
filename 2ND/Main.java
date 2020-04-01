@@ -13,7 +13,7 @@ public class Main {
         //virtualMachine.loadToMemory("2ND/PROG1.txt");
 
         Memory mem = new Memory();
-        System.out.println(mem.loadToMemory("2ND/PROGURAMUUWU.txt"));
+        mem.loadToMemory("2ND/PROGURAMUUWU.txt");
 
 
 
