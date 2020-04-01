@@ -20,7 +20,7 @@ public class Memory{
     }
 
     public static int getNumberOne(){
-        System.out.println(Word.wordToInt(getNext()));
+        System.out.println(Word.wordToString(getNext()));
         return 1;
     }
 
