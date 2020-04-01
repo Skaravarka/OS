@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Memory{
-    private ArrayList<Word> virtualMemory = new ArrayList<Word>();
+    private ArrayList<Word> realMemory = new ArrayList<Word>();
 
     public void PrintAll(){
-       for(int i = 0; i < this.virtualMemory.size();i++){
-           System.out.println(Word.wordToString(this.virtualMemory.get(i)));
+       for(int i = 0; i < this.realMemory.size();i++){
+           System.out.println(i+Word.wordToString(this.realMemory.get(i)));
        }
     }
 
@@ -29,10 +29,13 @@ public class Memory{
                     scanner.close();
                     return -1;
                 }
-                if(segmentFlag == 1){
-                    System.out.println(data);
+                if(segmentFlag == 2){
                     String[] parts = data.split(" ");
-                    //virtualMemory.set(Integer.parseInt(parts[1]), parts[2]);
+                    while(parts[1].length() != 4){
+                        parts[1] = " " + parts[1];
+                    }
+                    System.out.println(Integer.parseInt(parts[0]));
+                    realMemory.set(Integer.parseInt(parts[0]), Word.stringToWord(parts[1]));
                     //System.out.println("final" + Word.wordToString(Word.stringToWord("ABCD")));
                 }
             }
