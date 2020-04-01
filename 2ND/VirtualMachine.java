@@ -29,6 +29,9 @@ public class VirtualMachine {
             System.out.println(i + " " + Word.wordToString(virtualMemory.get(i)));
         }
     }
+    private Word getMemoryCell(int index){
+        return virtualMemory.get(index);
+    }
 
     public int loadToMemory(String fileName) {
         File file = new File(fileName);
@@ -143,6 +146,7 @@ public class VirtualMachine {
         }
         if (string.contains("JMP ")){
             JMP();
+            //setCc(cc - arr);
             return;
         }
         if (string.contains("JEZ ")){
