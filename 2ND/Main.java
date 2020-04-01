@@ -15,12 +15,9 @@ public class Main {
         
         System.out.println("Helllooo, Welcum to out computah");
         Memory mem = new Memory();
-<<<<<<< HEAD
         System.out.println(mem.loadToMemory("2ND/PROGURAMUUWU.txt"));
         
-=======
         mem.loadToMemory("2ND/PROGURAMUUWU.txt");
->>>>>>> ac838e69ba9f0a3f3c85831dd53f60f8bd955e48
 
         while(true){
             
