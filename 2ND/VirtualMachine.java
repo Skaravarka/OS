@@ -77,23 +77,20 @@ public class VirtualMachine {
     public void DoNextInstruction(){
         String string = "";
 
-        if (string.contains("END")){
-            return;
-        }
         if (string.contains("ADD ")){
-            ADD();
+            //ADD();
             return;
         }
         if (string.contains("SUB ")){
-            SUB();
+            //SUB();
             return;
         }
         if (string.contains("MOR ")){
-            MOR();
+            //MOR();
             return;
         }
         if (string.contains("EQL ")){
-            EQL();
+            //EQL();
             return;
         }
         if (string.contains("MOV ")){
@@ -197,20 +194,26 @@ public class VirtualMachine {
     }
 
     //Aritmetines komandos
-    private void ADD(){
-
+    private int ADD(int x1, int x2){
+        return x1+x2;
     }
 
-    private void SUB(){
-
+    private int SUB(int x1, int x2){
+        return x1-x2;
     }
     //Palyginimo komandos
-    private void MOR(){
-
+    private boolean MOR(int x1, int x2){
+        if(x1>x2)
+            return true;
+        else
+            return false;
     }
 
-    private void EQL(){
-
+    private boolean EQL(int x1, int x2){
+        if(x1==x2)
+            return true;
+        else
+            return false;
     }
     //Darbui su atmintimi komandos
     private void MOV(){

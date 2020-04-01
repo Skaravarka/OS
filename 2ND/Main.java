@@ -11,7 +11,7 @@ public class Main {
         VirtualMachine virtualMachine = new VirtualMachine(0, 0, 0, 0, 0, 0);
         
         virtualMachine.loadToMemory("2ND/PROG1.txt");
-
+        
     }
 
 }
