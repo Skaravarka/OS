@@ -4,12 +4,24 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Memory{
-    private ArrayList<Word> realMemory = new ArrayList<Word>();
+    private static ArrayList<Word> realMemory = new ArrayList<Word>();
+
+    static int pointer=0;
 
     public void PrintAll(){
-       for(int i = 0; i < this.realMemory.size();i++){
-           System.out.println(i+Word.wordToString(this.realMemory.get(i)));
+       for(int i = 0; i < realMemory.size();i++){
+           System.out.println(i+" "+Word.wordToString(realMemory.get(i)));
        }
+    }
+
+    public static Word getNext(){
+        pointer = pointer +1;
+        return realMemory.get(pointer-1);
+    }
+
+    public static int getNumberOne(){
+        System.out.println(Word.wordToInt(getNext()));
+        return 1;
     }
 
     public int loadToMemory(String fileName) {
@@ -30,13 +42,7 @@ public class Memory{
                     return -1;
                 }
                 if(segmentFlag == 2){
-                    String[] parts = data.split(" ");
-                    while(parts[1].length() != 4){
-                        parts[1] = " " + parts[1];
-                    }
-                    System.out.println(Integer.parseInt(parts[0]));
-                    realMemory.set(Integer.parseInt(parts[0]), Word.stringToWord(parts[1]));
-                    //System.out.println("final" + Word.wordToString(Word.stringToWord("ABCD")));
+                    realMemory.add(Word.stringToWord(data));
                 }
             }
             scanner.close();

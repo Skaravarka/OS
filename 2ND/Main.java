@@ -10,18 +10,20 @@ public class Main {
 
         VirtualMachine virtualMachine = new VirtualMachine(0, 0, 0, 0, 0, 0);
 
-        virtualMachine.loadToMemory("2ND/PROG1.txt");
-        virtualMachine.printVirtualMemory();
+        //virtualMachine.loadToMemory("2ND/PROG1.txt");
+        //virtualMachine.printVirtualMemory();
         
-        System.out.println("Helllooo, Welcum to out computah");
+        //System.out.println("Helllooo, Welcum to our computah");
         Memory mem = new Memory();
-        System.out.println(mem.loadToMemory("2ND/PROGURAMUUWU.txt"));
+        //System.out.println(mem.loadToMemory("2ND/PROGURAMUUWU.txt"));
         
         mem.loadToMemory("2ND/PROGURAMUUWU.txt");
+        mem.PrintAll();
+        virtualMachine.DoNextInstruction();
+        Memory.getNumberOne();
 
-        while(true){
-            
-        }
+
+
     }
     public void printHelp(){
         System.out.println("#####################");

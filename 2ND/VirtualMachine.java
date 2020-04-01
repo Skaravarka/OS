@@ -85,10 +85,11 @@ public class VirtualMachine {
     }
 
     public void DoNextInstruction(){
-        String string = "";
+        String string = Word.wordToString(Memory.getNext());
+        System.out.println(string);
 
         if (string.contains("ADD ")){
-            //ADD();
+            
             return;
         }
         if (string.contains("SUB ")){
