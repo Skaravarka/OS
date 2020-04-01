@@ -1,4 +1,6 @@
 CODE
 ADD 
 1212
+SUB 
+2412
 HALT
