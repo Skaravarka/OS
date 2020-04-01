@@ -1,0 +1,4 @@
+CODE
+ADD 
+1212
+HALT
