@@ -25,7 +25,7 @@ public class VirtualMachine {
         this.mp = mp;
     }
 
-    public void loadToMemory(String fileName) {
+    public int loadToMemory(String fileName) {
         File file = new File(fileName);
         Scanner scanner;
         int segmentFlag = 0; //DATA CODE HALT
@@ -45,7 +45,7 @@ public class VirtualMachine {
                 }
                 if(data == "HALT"){
                     scanner.close();
-                    return;
+                    return -1;
                 }
                 if(segmentFlag == 1){
 
@@ -53,7 +53,7 @@ public class VirtualMachine {
                 if(segmentFlag == 2){
 
                 }
-                
+                return -1;
 
             }
             scanner.close();
@@ -61,6 +61,7 @@ public class VirtualMachine {
             
             e.printStackTrace();
         }
+        return -1;
     }
 
     private void setClearMemory(){
