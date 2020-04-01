@@ -30,12 +30,8 @@ public class Memory{
                     return -1;
                 }
                 if(segmentFlag == 2){
-                    String[] parts = data.split(" ");
-                    while(parts[1].length() != 4){
-                        parts[1] = " " + parts[1];
-                    }
-                    System.out.println(Integer.parseInt(parts[0]));
-                    realMemory.set(Integer.parseInt(parts[0]), Word.stringToWord(parts[1]));
+                    String info = scanner.nextLine();
+                    
                     //System.out.println("final" + Word.wordToString(Word.stringToWord("ABCD")));
                 }
             }
