@@ -19,9 +19,12 @@ public class Memory{
         return realMemory.get(pointer-1);
     }
 
-    public static int getNumberOne(){
-        System.out.println(Word.wordToInt(getNext()));
-        return 1;
+    public static int[] getNumbersFromWord(){
+        String string = Word.wordToString(getNext());
+        String x1 = string.substring(0,2);
+        String x2 = string.substring(2,4);
+        int[] arr = {Integer.parseInt(x1),Integer.parseInt(x2)};
+        return arr;
     }
 
     public int loadToMemory(String fileName) {

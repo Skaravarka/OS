@@ -23,7 +23,7 @@ public class Main {
         mem.loadToMemory("2ND/PROGURAMUUWU.txt");
         mem.PrintAll();
         virtualMachine.DoNextInstruction();
-        Memory.getNumberOne();
+        virtualMachine.DoNextInstruction();
 
 
 

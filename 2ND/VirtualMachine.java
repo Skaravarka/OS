@@ -86,14 +86,15 @@ public class VirtualMachine {
 
     public void DoNextInstruction(){
         String string = Word.wordToString(Memory.getNext());
-        System.out.println(string);
 
         if (string.contains("ADD ")){
-            
+            int[] arr = Memory.getNumbersFromWord();
+            System.out.println("Adding "+arr[0]+"+"+arr[1]+"="+ADD(arr[0], arr[1]));
             return;
         }
         if (string.contains("SUB ")){
-            //SUB();
+            int[] arr = Memory.getNumbersFromWord();
+            System.out.println("Sub "+arr[0]+"-"+arr[1]+"="+SUB(arr[0], arr[1]));
             return;
         }
         if (string.contains("MOR ")){
