@@ -4,12 +4,15 @@ public class Main {
 
     /*
     TODO:
-        
+
+    Padarytos komandos:
+    ADD & ADDV
+    SUB & SUBV
+    MOV & MOVV
+
 
     */
     public static void main(String[] args) {
-        System.out.println("Hello, World");
-
         VirtualMachine virtualMachine = new VirtualMachine(0, 0, 0, 0, 0, 0);
 
         //virtualMachine.loadToMemory("2ND/PROG1.txt");
@@ -21,9 +24,12 @@ public class Main {
         //System.out.println(mem.loadToMemory("2ND/PROGURAMUUWU.txt"));
         
         mem.loadToMemory("2ND/PROGURAMUUWU.txt");
-        mem.PrintAll();
         virtualMachine.DoNextInstruction();
         virtualMachine.DoNextInstruction();
+        virtualMachine.DoNextInstruction();
+
+        System.out.println("AX:"+virtualMachine.getAx());
+        System.out.println("BX:"+virtualMachine.getBx());
 
 
 

@@ -87,17 +87,146 @@ public class VirtualMachine {
         }
     }
 
+    private boolean isRegister(String reg){
+        if(reg.equals("AX") || reg.equals("BX")){
+            return true;
+        }
+        return false;
+    }
+
     public void DoNextInstruction(){
         String string = Word.wordToString(Memory.getNext());
 
-        if (string.contains("ADD ")){
-            int[] arr = Memory.getNumbersFromWord();
-            System.out.println("Adding "+arr[0]+"+"+arr[1]+"="+ADD(arr[0], arr[1]));
+        if (string.equals("ADD ")){
+            string = Word.wordToString(Memory.getNext());
+            String Lside = string.substring(0, 2).trim();
+            String Rside = string.substring(2, 4).trim();
+            System.out.println("Vykdoma: ADD "+Lside+", "+Rside);
+            if(isRegister(Lside)){
+                if(Lside.equals("AX")){
+                    if(isRegister(Rside)){
+                        if(Rside.equals("AX")){
+                            //ADD AX, AX
+                            setAx(getAx()+getAx());
+                        }
+                        else{
+                            //ADD AX, BX
+                            setAx(getAx()+getBx());
+                        }
+                    }
+                    else{
+                        //ADD AX, [hex]
+                        setAx(getAx()+Integer.parseInt(Word.wordToString(virtualMemory.get(Integer.parseInt(Rside, 16)))));
+                    }
+                }
+                else{
+                    //Lside is BX
+                    if(isRegister(Rside)){
+                        if(Rside.equals("AX")){
+                            //ADD BX, AX
+                            setBx(getBx()+getAx());
+                        }
+                        else{
+                            //ADD BX, BX
+                            setBx(getBx()+getBx());
+                        }
+                    }
+                    else{
+                        //ADD BX, [hex]
+                        setBx(getBx()+Integer.parseInt(Word.wordToString(virtualMemory.get(Integer.parseInt(Rside, 16)))));
+                    }
+                }
+            }
+            else{
+                System.out.println("Left side is not a register, refer to docs");
+            }
             return;
         }
-        if (string.contains("SUB ")){
-            int[] arr = Memory.getNumbersFromWord();
-            System.out.println("Sub "+arr[0]+"-"+arr[1]+"="+SUB(arr[0], arr[1]));
+        else if(string.equals("ADDV")){
+            //ADD REG, value
+            string = Word.wordToString(Memory.getNext());
+            String Lside = string.substring(0, 2).trim();
+            String Rside = string.substring(2, 4).trim();
+            System.out.println("Vykdoma: ADDV "+Lside+", "+Rside);
+            if(isRegister(Lside)){
+                if(Lside.equals("AX")){
+                    //ADD AX, value
+                    setAx(getAx()+Integer.parseInt(Rside));
+                }
+                else{
+                    //ADD BX, value
+                    setBx(getBx()+Integer.parseInt(Rside));
+                }
+            }
+            else{
+                System.out.println("Left side is not a register, refer to docs");
+            }
+            return;
+        }
+        if (string.equals("SUB ")){
+            string = Word.wordToString(Memory.getNext());
+            String Lside = string.substring(0, 2).trim();
+            String Rside = string.substring(2, 4).trim();
+            System.out.println("Vykdoma: SUB "+Lside+", "+Rside);
+            if(isRegister(Lside)){
+                if(Lside.equals("AX")){
+                    if(isRegister(Rside)){
+                        if(Rside.equals("AX")){
+                            //SUB AX, AX
+                            setAx(0);
+                        }
+                        else{
+                            //SUB AX, BX
+                            setAx(getAx()-getBx());
+                        }
+                    }
+                    else{
+                        //SUB AX, [hex]
+                        setAx(getAx()-Integer.parseInt(Word.wordToString(virtualMemory.get(Integer.parseInt(Rside, 16)))));
+                    }
+                }
+                else{
+                    //Lside is BX
+                    if(isRegister(Rside)){
+                        if(Rside.equals("AX")){
+                            //SUB BX, AX
+                            setBx(getBx()-getAx());
+                        }
+                        else{
+                            //SUB BX, BX
+                            setBx(0);
+                        }
+                    }
+                    else{
+                        //SUB BX, [hex]
+                        setBx(getBx()-Integer.parseInt(Word.wordToString(virtualMemory.get(Integer.parseInt(Rside, 16)))));
+                    }
+                }
+            }
+            else{
+                System.out.println("Left side is not a register, refer to docs");
+            }
+            return;
+        }
+        else if(string.equals("SUBV")){
+            //ADD REG, value
+            string = Word.wordToString(Memory.getNext());
+            String Lside = string.substring(0, 2).trim();
+            String Rside = string.substring(2, 4).trim();
+            System.out.println("Vykdoma: SUBV "+Lside+", "+Rside);
+            if(isRegister(Lside)){
+                if(Lside.equals("AX")){
+                    //ADD AX, value
+                    setAx(getAx()-Integer.parseInt(Rside));
+                }
+                else{
+                    //ADD BX, value
+                    setBx(getBx()-Integer.parseInt(Rside));
+                }
+            }
+            else{
+                System.out.println("Left side is not a register, refer to docs");
+            }
             return;
         }
         if (string.contains("MOR ")){
@@ -108,9 +237,88 @@ public class VirtualMachine {
             //EQL();
             return;
         }
-        if (string.contains("MOV ")){
-            MOV();
+        if (string.equals("MOV ")){
+            string = Word.wordToString(Memory.getNext());
+            String Lside = string.substring(0, 2).trim();
+            String Rside = string.substring(2, 4).trim();
+            System.out.println("Vykdoma MOV "+Lside+", "+Rside);
+            if(isRegister(Lside)){
+                if(Lside.equals("AX")){
+                    if(isRegister(Rside)){
+                        if(Rside.equals("AX")){
+                            //Do nuffin cuz MOV AX, AX
+                        }
+                        else{
+                            //MOV AX, BX
+                            setAx(getBx());
+                        }
+                    }
+                    else{
+                        //MOV AX, [hex]
+                        //Setina ax i int value of cell value of hex number kill me :)
+                        setAx(Integer.parseInt(Word.wordToString(getMemoryCell(Integer.parseInt(Rside,16)))));
+                    }
+                }
+                else{
+                    //Lside is BX
+                    if(isRegister(Rside)){
+                        if(Rside.equals("AX")){
+                            //MOV BX, AX
+                            setBx(getAx());
+                        }
+                        else{
+                            //Do nuffin cuz MOV BX, BX
+                        }
+                    }
+                    else{
+                        //MOV BX, [hex]
+                        //I BX ideda [hex] vietoje esanti cello int value
+                        setBx(Integer.parseInt(Word.wordToString(virtualMemory.get(Integer.parseInt(Rside, 16)))));
+                    }
+                }
+            }
+            else{
+                //Lside not register
+                if(isRegister(Rside)){
+                    if(Rside.equals("AX")){
+                        //MOV [hex], AX
+                        virtualMemory.set(Integer.parseInt(Lside, 16), Word.stringToWord(Integer.toString(getAx())));
+                    }
+                    else{
+                        //MOV [hex], BX
+                        virtualMemory.set(Integer.parseInt(Lside, 16), Word.stringToWord(Integer.toString(getBx())));
+                    }
+                }
+                else{
+                    //MOV [hex], [hex]
+                    //I atminties vieta i kuria rodo [hex1] idedama atvinties vieta i kuria rodo [hex2]
+                    virtualMemory.set(Integer.parseInt(Lside, 16), virtualMemory.get(Integer.parseInt(Rside, 16)));
+                    
+                }
+            }
             return;
+        }
+        else if(string.equals("MOVV")){
+            string = Word.wordToString(Memory.getNext());
+            String Lside = string.substring(0, 2).trim();
+            String Rside = string.substring(2, 4).trim();
+            System.out.println("Vykdoma MOVV "+Lside+", "+Rside);
+            if(isRegister(Lside)){
+                if(Lside.equals("AX")){
+                    //MOV AX, value
+                    setAx(Integer.parseInt(Rside));
+                }
+                else{
+                    //MOV BX, value
+                    setBx(Integer.parseInt(Rside));
+                }
+            }
+            else{
+                //MOV [hex], values
+                //TODO: TEST THIS
+                virtualMemory.set(Integer.parseInt(Lside, 16), Word.stringToWord(Rside));
+                
+            }
         }
         if (string.contains("LEA ")){
             LEA();
