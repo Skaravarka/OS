@@ -926,7 +926,21 @@ public class VirtualMachine {
             return;
         }
         if (string.contains("PRR ")){
-            //Nusikelia po OS
+            string = Word.wordToString(Memory.getInstruction(getCc())).trim();
+            incCc();
+            System.out.println("Vykdoma PRR "+string);
+            if(isRegister(string)){
+                if(string.equals("AX")){
+                    //PRR AX
+                    setSf(39);
+                }
+                else{
+                    //PRR BX
+                    setSf(78);
+                }
+            }
+            else
+                System.out.println("Turejai registra ivest");
             return;
         }
         if (string.contains("PRS ")){
