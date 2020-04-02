@@ -4,28 +4,28 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Memory{
-    private static ArrayList<Word> Memory = new ArrayList<Word>();
+    private volatile ArrayList<Word>  mem = new ArrayList<Word>();
 
     public Memory(){
         for(int i = 0; i < 256; i++){
             Word word = new Word();
             word = Word.stringToWord("0000");
-            Memory.add(word);
+            mem.add(word);
         }
     }
 
     public void PrintAll(){
-       for(int i = 0; i < Memory.size();i++){
-           System.out.println(i+" "+Word.wordToString(Memory.get(i)));
+       for(int i = 0; i < mem.size();i++){
+           System.out.println(i +" "+Word.wordToString(mem.get(i)));
        }
     }
 
     public Word getInstruction(int Cc){
-        return Memory.get(Cc);
+        return mem.get(Cc);
     }
 
     public void set(int value, Word word){
-        Memory.set(value, word);
+        mem.set(value, word);
     }
 
     public int loadToMemory(String fileName) {
@@ -50,7 +50,7 @@ public class Memory{
                 }
                 if(data.equals("HALT")){
                     scanner.close();
-                    return -1;
+                    return cc;
                 }
                 if(segmentFlag == 1){
                     //System.out.println(data);
@@ -62,10 +62,10 @@ public class Memory{
                     // }
                     // Memory.set(Integer.parseInt(parts[0]), Word.stringToWord(parts[1]));
                     // //System.out.println("final" + Word.wordToString(Word.stringToWord("ABCD")));
-                    Memory.add(Word.stringToWord(data));
+                    mem.add(Word.stringToWord(data));
                 }
                 if(segmentFlag == 2){
-                    Memory.add(Word.stringToWord(data));
+                    mem.add(Word.stringToWord(data));
                 }
             }
             scanner.close();
