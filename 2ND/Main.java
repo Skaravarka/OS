@@ -21,8 +21,6 @@ public class Main {
         Memory mem = new Memory();
         //System.out.println(mem.loadToMemory("2ND/PROGURAMUUWU.txt"));
         
-        mem.loadToMemory("2ND/PROGURAMUUWU.txt");
-        mem.PrintAll();
         //virtualMachine.runProgram();
         // virtualMachine.doStep();
         // virtualMachine.doStep();
