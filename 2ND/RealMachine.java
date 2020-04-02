@@ -1,15 +1,16 @@
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class RealMachine implements Runnable {
 
+    ArrayList<Memory> allMemory = new ArrayList<Memory>();
     ArrayList<VirtualMachine> VMList = new ArrayList<VirtualMachine>();
     private Thread consoleInputsThread;
     private ConsoleInputs consoleInputs;
     private int DEFAULTTI = 50;
 
     private int TI = 0;
+    private int pgr = 0;
 
     public void printHelp() {
         System.out.println("#####################");
@@ -18,9 +19,18 @@ public class RealMachine implements Runnable {
         System.out.println("To run VM press 2");
         System.out.println("To run VM till to completion 3");
     }
+    public void createMemory(){
+        for(int i = 0; i < 16; i++){
+            allMemory.add(new Memory());
+        }
+    }
 
     private void addVirtualMachine() {
-        VMList.add(new VirtualMachine(0, 0, 0, 0, 0, 0));
+        Memory tempMem = allMemory.get(pgr);
+        pgr++;
+        int cc = tempMem.loadToMemory("2ND/PROGURAMUUWU.txt");
+
+        VMList.add(new VirtualMachine(tempMem, 0, 0, cc, 0, 0));
     }
 
     private void waitABit() {

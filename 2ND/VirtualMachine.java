@@ -10,7 +10,7 @@ public class VirtualMachine {
     private int cc;
     private int sf;
     private int mp;
-    private Memory memory = new Memory();
+private Memory memory = new Memory();
     
     
     public VirtualMachine(Memory memory, int ax, int bx, int cc, int sf, int mp) {

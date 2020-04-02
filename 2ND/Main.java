@@ -3,25 +3,14 @@ import java.util.Scanner;
 public class Main {
 
     /*
-    TODO: Virtual machine reading needs trims
-
-    Padarytos komandos:
-    ADD & ADDV
-    SUB & SUBV
-    MOV
-    LEA
-    MOR
-    EQL
-    JMP
-    JEZ
-    JNZ
-    JGZ
-    JLZ
+    TODO: 
+        setReadFile
+        pager
 
 
     */
     public static void main(String[] args) {
-        VirtualMachine virtualMachine = new VirtualMachine(0, 0, 0, 0, 0, 0);
+        //VirtualMachine virtualMachine = new VirtualMachine(0, 0, 0, 0, 0, 0);
 
         // virtualMachine.loadToMemory("2ND/PROG1.txt");
         // virtualMachine.printVirtualMemory();
@@ -39,8 +28,8 @@ public class Main {
         // virtualMachine.doStep();
         // virtualMachine.doStep();
 
-        System.out.println(virtualMachine.getAx());
-        System.out.println(virtualMachine.getBx());
+        //System.out.println(virtualMachine.getAx());
+        //System.out.println(virtualMachine.getBx());
 
         Thread RM1 = new Thread(new RealMachine());
 
