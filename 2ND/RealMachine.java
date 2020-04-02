@@ -16,10 +16,19 @@ public class RealMachine implements Runnable {
         System.out.println("To quit press: x");
         System.out.println("To create VM press 1");
         System.out.println("To run VM press 2");
+        System.out.println("To run VM till to completion 3");
     }
 
     private void addVirtualMachine() {
         VMList.add(new VirtualMachine(0, 0, 0, 0, 0, 0));
+    }
+
+    private void waitABit() {
+        try {
+            wait(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void run() {
@@ -52,6 +61,9 @@ public class RealMachine implements Runnable {
                 if(command.equals("2")){
                     runVirtualMachines();
                 }
+                if(command.equals("3")){
+                    runVirtualMachineTillCompletion();
+                }
             }       
         }
     }
@@ -62,8 +74,17 @@ public class RealMachine implements Runnable {
             }
         }
         // do finnished stuff
+        System.out.println("oneStep");
+    }
+    private void runVirtualMachineTillCompletion(){
+        for(int t = DEFAULTTI;t > 0; t++){
+            for (int i = 0; i < VMList.size(); i++){
+                if(!VMList.get(i).isFinished()){
+                    VMList.get(i).doStep();
+                }
+            }
+        }
         System.out.println("finished");
     }
-    
 
 }
