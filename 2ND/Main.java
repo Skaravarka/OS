@@ -33,9 +33,10 @@ public class Main {
         
         mem.loadToMemory("2ND/PROGURAMUUWU.txt");
         mem.PrintAll();
-        virtualMachine.DoNextInstruction();
-        virtualMachine.DoNextInstruction();
-        virtualMachine.DoNextInstruction();
+        virtualMachine.runProgram();
+
+        System.out.println(virtualMachine.getAx());
+        System.out.println(virtualMachine.getBx());
 
 
 

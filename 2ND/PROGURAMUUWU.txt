@@ -1,8 +1,6 @@
 CODE
 ADDV
 AX12
-JMP 
- 0  
 SUBV
 AX3 
 LEA 

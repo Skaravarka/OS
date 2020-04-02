@@ -19,6 +19,14 @@ public class Memory{
         return realMemory.get(pointer-1);
     }
 
+    public static Word getInstruction(int Cc){
+        return realMemory.get(Cc);
+    }
+
+    public static int getInstructionCount(){
+        return realMemory.size()-1;
+    }
+
     public static void setMemPointer(int a){
         pointer = a;
     }
