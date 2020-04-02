@@ -61,7 +61,7 @@ public class Memory{
                     i++;
                 }
                 if(segmentFlag == 2){
-                    
+                    System.out.println(data);
                     mem.set(i, Word.stringToWord(data));
                     i++;
                 }

@@ -10,7 +10,7 @@ public class RealMachine implements Runnable {
     private int DEFAULTTI = 50;
 
     private int TI = 0;
-    private int pgr = 0;
+    private int[] ptr = new int[4];
 
     public void printHelp() {
         System.out.println("#####################");
@@ -26,10 +26,19 @@ public class RealMachine implements Runnable {
     }
 
     private void addVirtualMachine() {
-        Memory tempMem = allMemory.get(pgr);
-        pgr++;
-        int cc = tempMem.loadToMemory("2ND/PROGURAMUUWU.txt");
-        //tempMem.PrintAll();
+        Memory tempMem = new Memory();
+        int cc = 0;
+        for(int i = 0; i < 4; i++){
+            if(ptr[i] == -1){
+                ptr[i] = i;
+                cc = allMemory.get(ptr[i]).loadToMemory("2ND/PROGURAMUUWU.txt");
+                tempMem = allMemory.get(ptr[i]);
+                break;
+            }
+        }
+        // cc = allMemory.get(0).loadToMemory("2ND/PROGURAMUUWU.txt");
+        // tempMem = allMemory.get(0);
+        tempMem.PrintAll();
         //System.out.println("cc" + cc);
 
         VMList.add(new VirtualMachine(tempMem, 0, 0, cc, 0, 0));
@@ -45,6 +54,10 @@ public class RealMachine implements Runnable {
 
     public void run() {
         createMemory();
+        ptr[0] = -1;
+        ptr[1] = -1;
+        ptr[2] = -1;
+        ptr[3] = -1;
         try {
             consoleInputs = new ConsoleInputs();
         } catch (IOException e) {
@@ -85,6 +98,8 @@ public class RealMachine implements Runnable {
         for (int i = 0; i < VMList.size(); i++){
             if(!VMList.get(i).isFinished()){
                 VMList.get(i).doStep();
+                interuptManagement(VMList.get(i).getSf(), ptr[i], i);
+
             }
         }
         // do finnished stuff
@@ -95,17 +110,23 @@ public class RealMachine implements Runnable {
             for (int i = 0; i < VMList.size(); i++){
                 if(!VMList.get(i).isFinished()){
                     VMList.get(i).doStep();
-                    interuptManagement(VMList.get(i).getSf());
+                    interuptManagement(VMList.get(i).getSf(), ptr[i], i);
                 }
             }
         }
         System.out.println("finished");
     }
-    private void interuptManagement(int flag){
+    private void interuptManagement(int flag, int pt, int i){
         switch(flag){
             case 39:
+                System.out.println(VMList.get(i).getAx());
                 break;
             case 78:
+                System.out.println(VMList.get(i).getBx());
+                break;
+            case 20:
+                break;
+            case 21:
                 break;
                 
         }
