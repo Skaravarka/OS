@@ -230,11 +230,81 @@ public class VirtualMachine {
             return;
         }
         if (string.contains("MOR ")){
-            //MOR();
+            string = Word.wordToString(Memory.getNext());
+            String Lside = string.substring(0, 2).trim();
+            String Rside = string.substring(2, 4).trim();
+            System.out.println("Vykdoma MOR "+Lside+", "+Rside);
+            if(isRegister(Lside)&&isRegister(Rside)){
+                if(Lside.equals("AX")){
+                    if(Rside.equals("AX")){
+                        //MOR AX, AX
+                        setSf(0);
+                    }
+                    else{
+                        //MOX AX, BX
+                        if(getAx()>getBx())
+                            setSf(1);
+                        else
+                            setSf(0);
+                    }
+                }
+                else{
+                    if(Rside.equals("AX")){
+                        //MOR BX, AX
+                        if(getBx()>getAx())
+                            setSf(1);
+                        else
+                            setSf(0);
+                    }
+                    else{
+                        //MOR BX, BX
+                        setSf(0);
+                    }
+
+                }
+            }
+            else{
+                System.out.println("One of the operands are not registers AX or BX");
+            }
             return;
         }
         if (string.contains("EQL ")){
-            //EQL();
+            string = Word.wordToString(Memory.getNext());
+            String Lside = string.substring(0, 2).trim();
+            String Rside = string.substring(2, 4).trim();
+            System.out.println("Vykdoma MOR "+Lside+", "+Rside);
+            if(isRegister(Lside)&&isRegister(Rside)){
+                if(Lside.equals("AX")){
+                    if(Rside.equals("AX")){
+                        //EQL AX, AX
+                        setSf(1);
+                    }
+                    else{
+                        //EQL AX, BX
+                        if(getAx()==getBx())
+                            setSf(1);
+                        else
+                            setSf(0);
+                    }
+                }
+                else{
+                    if(Rside.equals("AX")){
+                        //EQL BX, AX
+                        if(getBx()==getAx())
+                            setSf(1);
+                        else
+                            setSf(0);
+                    }
+                    else{
+                        //EQL BX, BX
+                        setSf(1);
+                    }
+
+                }
+            }
+            else{
+                System.out.println("One of the operands are not registers AX or BX");
+            }
             return;
         }
         if (string.equals("MOV ")){

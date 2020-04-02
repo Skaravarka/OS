@@ -9,14 +9,16 @@ public class Main {
     ADD & ADDV
     SUB & SUBV
     MOV & MOVV
+    MOR
+    EQL
 
 
     */
     public static void main(String[] args) {
         VirtualMachine virtualMachine = new VirtualMachine(0, 0, 0, 0, 0, 0);
 
-        //virtualMachine.loadToMemory("2ND/PROG1.txt");
-        //virtualMachine.printVirtualMemory();
+        // virtualMachine.loadToMemory("2ND/PROG1.txt");
+        // virtualMachine.printVirtualMemory();
         
         System.out.println("Helllooo, Welcum to our computah");
         //System.out.println("Helllooo, Welcum to our computah");
