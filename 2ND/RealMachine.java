@@ -66,8 +66,8 @@ public class RealMachine implements Runnable {
                     printHelp();
                 }
                 if(command.equals("1")){
-                    System.out.println("added A Virtual Machine");
                     addVirtualMachine();
+                    System.out.println("added A Virtual Machine");
                 }
                 if(command.equals("2")){
                     System.out.println("");
