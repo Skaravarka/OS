@@ -66,9 +66,17 @@ private Memory memory = new Memory();
 
     public boolean isFinished(String str){
         if(str.equals("HALT")){
-            return false;
+            setCc(-10);
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    public boolean isFinished(){
+        if(getCc()<0)
+            return true;
+        else
+            return false;
     }
 
 
