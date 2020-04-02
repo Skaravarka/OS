@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Memory{
-    private volatile ArrayList<Word>  mem = new ArrayList<Word>();
+    private volatile ArrayList<Word> mem = new ArrayList<Word>();
 
     public Memory(){
         for(int i = 0; i < 256; i++){
@@ -30,21 +30,23 @@ public class Memory{
 
     public int loadToMemory(String fileName) {
         File file = new File(fileName);
-        int cc = 1;
+        int cc = 0;
+        int i = 0;
         Scanner scanner;
         int segmentFlag = 0; //DATA CODE HALT
         try {
             scanner = new Scanner(file);
             while(scanner.hasNextLine()){
                 String data = scanner.nextLine();
-                data.toUpperCase();
+                data = data.toUpperCase();
+                
                 if(data.equals("DATA")){
-                    cc++;
+                    //cc++;
                     segmentFlag = 1;
                     continue;
                 }
                 if(data.equals("CODE")){
-                    cc++;
+                    //cc++;
                     segmentFlag = 2;
                     continue;
                 }
@@ -53,19 +55,14 @@ public class Memory{
                     return cc;
                 }
                 if(segmentFlag == 1){
-                    //System.out.println(data);
                     cc++;
-                    // String[] parts = data.split(" ");
-                    
-                    // while(parts[1].length() != 4){
-                    //     parts[1] = " " + parts[1];
-                    // }
-                    // Memory.set(Integer.parseInt(parts[0]), Word.stringToWord(parts[1]));
-                    // //System.out.println("final" + Word.wordToString(Word.stringToWord("ABCD")));
-                    mem.add(Word.stringToWord(data));
+                    mem.set(i, Word.stringToWord(data));
+                    i++;
                 }
                 if(segmentFlag == 2){
-                    mem.add(Word.stringToWord(data));
+                    
+                    mem.set(i, Word.stringToWord(data));
+                    i++;
                 }
             }
             scanner.close();

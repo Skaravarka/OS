@@ -30,7 +30,7 @@ public class RealMachine implements Runnable {
         pgr++;
         int cc = tempMem.loadToMemory("2ND/PROGURAMUUWU.txt");
         //tempMem.PrintAll();
-        System.out.println(cc);
+        //System.out.println("cc" + cc);
 
         VMList.add(new VirtualMachine(tempMem, 0, 0, cc, 0, 0));
     }
