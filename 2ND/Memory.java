@@ -19,6 +19,10 @@ public class Memory{
         return realMemory.get(pointer-1);
     }
 
+    public static void setMemPointer(int a){
+        pointer = a;
+    }
+
     public static int[] getNumbersFromWord(){
         String string = Word.wordToString(getNext());
         String x1 = string.substring(0,2);

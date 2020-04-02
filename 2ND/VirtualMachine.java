@@ -307,11 +307,11 @@ public class VirtualMachine {
             }
             return;
         }
-        if (string.equals("MOV ")){
+        if (string.equals("LEA ")){
             string = Word.wordToString(Memory.getNext());
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
-            System.out.println("Vykdoma MOV "+Lside+", "+Rside);
+            System.out.println("Vykdoma LEA "+Lside+", "+Rside);
             if(isRegister(Lside)){
                 if(Lside.equals("AX")){
                     if(isRegister(Rside)){
@@ -368,11 +368,11 @@ public class VirtualMachine {
             }
             return;
         }
-        else if(string.equals("MOVV")){
+        if(string.equals("MOV ")){
             string = Word.wordToString(Memory.getNext());
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
-            System.out.println("Vykdoma MOVV "+Lside+", "+Rside);
+            System.out.println("Vykdoma MOV "+Lside+", "+Rside);
             if(isRegister(Lside)){
                 if(Lside.equals("AX")){
                     //MOV AX, value
@@ -390,57 +390,161 @@ public class VirtualMachine {
                 
             }
         }
-        if (string.contains("LEA ")){
-            LEA();
-            return;
-        }
         if (string.contains("GET ")){
+            //Nusikelia po OS
             GET();
             return;
         }
         if (string.contains("PRR ")){
+            //Nusikelia po OS
             PRR();
             return;
         }
         if (string.contains("PRS ")){
+            //Nusikelia po OS
             PRS();
             return;
         }
         if (string.contains("WGD ")){
+            //Nusikelia po OS
             WGD();
             return;
         }
         if (string.contains("RGD ")){
+            //Nusikelia po OS
             RGD();
             return;
         }
         if (string.contains("LGD ")){
+            //Nusikelia po OS
             LGD();
             return;
         }
         if (string.contains("UGD ")){
+            //Nusikelia po OS
             UGD();
             return;
         }
         if (string.contains("JMP ")){
-            JMP();
-            //setCc(cc - arr);
+            string = Word.wordToString(Memory.getNext()).trim();
+            System.out.println("Vykdoma JMP "+string);
+            Memory.setMemPointer(Integer.parseInt(string));
             return;
         }
         if (string.contains("JEZ ")){
-            JEZ();
+            string = Word.wordToString(Memory.getNext());
+            String Lside = string.substring(0, 2).trim();
+            String Rside = string.substring(2, 4).trim();
+            System.out.println("Vykdoma JEZ "+Lside+", "+Rside);
+            if(isRegister(Lside)){
+                System.out.println("Lside should not be a register");
+            }
+            else{
+                if(isRegister(Rside)){
+                    if(Rside.equals("AX")){
+                        //JEZ [hex], AX
+                        if(getAx()==0){
+                            Memory.setMemPointer(Integer.parseInt(Lside, 16));
+                        }
+                    }
+                    else{
+                        //JEZ [hex], BX
+                        if(getBx()==0){
+                            Memory.setMemPointer(Integer.parseInt(Lside, 16));
+                        }
+                    }
+                }
+                else{
+                    System.out.println("Rside should be a register");
+                }
+            }
             return;
         }
         if (string.contains("JNZ ")){
-            JNZ();
+            string = Word.wordToString(Memory.getNext());
+            String Lside = string.substring(0, 2).trim();
+            String Rside = string.substring(2, 4).trim();
+            System.out.println("Vykdoma JNZ "+Lside+", "+Rside);
+            if(isRegister(Lside)){
+                System.out.println("Lside should not be a register");
+            }
+            else{
+                if(isRegister(Rside)){
+                    if(Rside.equals("AX")){
+                        //JEZ [hex], AX
+                        if(getAx()!=0){
+                            Memory.setMemPointer(Integer.parseInt(Lside, 16));
+                        }
+                    }
+                    else{
+                        //JEZ [hex], BX
+                        if(getBx()!=0){
+                            Memory.setMemPointer(Integer.parseInt(Lside, 16));
+                        }
+                    }
+                }
+                else{
+                    System.out.println("Rside should be a register");
+                }
+            }
             return;
         }
         if (string.contains("JGZ ")){
-            JGZ();
+            string = Word.wordToString(Memory.getNext());
+            String Lside = string.substring(0, 2).trim();
+            String Rside = string.substring(2, 4).trim();
+            System.out.println("Vykdoma JGZ "+Lside+", "+Rside);
+            if(isRegister(Lside)){
+                System.out.println("Lside should not be a register");
+            }
+            else{
+                if(isRegister(Rside)){
+                    if(Rside.equals("AX")){
+                        //JEZ [hex], AX
+                        if(getAx()>0){
+                            Memory.setMemPointer(Integer.parseInt(Lside, 16));
+                        }
+                    }
+                    else{
+                        //JEZ [hex], BX
+                        if(getBx()>0){
+                            Memory.setMemPointer(Integer.parseInt(Lside, 16));
+                        }
+                    }
+                }
+                else{
+                    System.out.println("Rside should be a register");
+                }
+            }
             return;
         }
         if (string.contains("JLZ ")){
-            JLZ();
+            string = Word.wordToString(Memory.getNext());
+            String Lside = string.substring(0, 2).trim();
+            String Rside = string.substring(2, 4).trim();
+            System.out.println("Vykdoma JLZ "+Lside+", "+Rside);
+            if(isRegister(Lside)){
+                System.out.println("Lside should not be a register");
+            }
+            else{
+                if(isRegister(Rside)){
+                    if(Rside.equals("AX")){
+                        //JEZ [hex], AX
+                        if(getAx()<0){
+                            Memory.setMemPointer(Integer.parseInt(Lside, 16));
+                        }
+                    }
+                    else{
+                        //JEZ [hex], BX
+                        if(getBx()<0){
+                            Memory.setMemPointer(Integer.parseInt(Lside, 16));
+                        }
+                    }
+                }
+                else{
+                    System.out.println("Rside should be a register");
+                }
+            }
             return;
         }
         if (string.contains("END ")){
