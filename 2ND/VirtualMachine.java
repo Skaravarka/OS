@@ -391,8 +391,18 @@ private Memory memory = new Memory();
             }
             return;
         }
+        //TODO:GET REWRITE BITCH
         if (string.contains("GET")){
-            //Nusikelia po OS
+            //GET value, returns pointer in AX 1<value<16
+            string = Word.wordToString(memory.getInstruction(getCc()));
+            incCc();
+            System.out.println("Vykdoma MOV "+string);
+            if(Integer.parseInt(string)<1 || Integer.parseInt(string)>16){
+                System.out.println("GET out of bounds, should be [1, 16] you donkey");
+            }
+            else{
+                setSf(Integer.parseInt(string));
+            }
             return;
         }
         if (string.contains("PRR")){
@@ -410,11 +420,27 @@ private Memory memory = new Memory();
                 }
             }
             else
-                System.out.println("Turejai registra ivest");
+                System.out.println("Turejai registra ivest tu asilo berete");
             return;
         }
         if (string.contains("PRS")){
-            //Nusikelia po OS
+            //Isspausdina pasirinkta atmienties bloka PRS reg , kur reg-AX/BX
+            string = Word.wordToString(memory.getInstruction(getCc())).trim();
+            incCc();
+            System.out.println("Vykdoma PRS "+string);
+            if(isRegister(string)){
+                if(string.equals("AX")){
+                    //PRS AX
+                    setSf(20);
+                }
+                else{
+                    //PRS BX
+                    setSf(21);
+                }
+            }
+            else{
+                System.out.println("Should be a register you mofo");
+            }
             return;
         }
         if (string.contains("WGD")){
