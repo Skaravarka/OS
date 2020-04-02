@@ -4,10 +4,12 @@ import java.util.Scanner;
 
 public class RealMachine implements Runnable {
 
-    // printHelp();
     ArrayList<VirtualMachine> VMList = new ArrayList<VirtualMachine>();
     private Thread consoleInputsThread;
     private ConsoleInputs consoleInputs;
+    private int DEFAULTTI = 50;
+
+    private int TI = 0;
 
     public void printHelp() {
         System.out.println("#####################");
@@ -27,14 +29,12 @@ public class RealMachine implements Runnable {
             e.printStackTrace();
         }
         consoleInputsThread = new Thread(consoleInputs);
-        consoleInputsThread.start();  
-        System.out.println("x"); 
+        consoleInputsThread.start();   
 
         printHelp();
         
         while(true){
             String command = consoleInputs.getLastCommand();
-            
 
             if(command != null){
                 System.out.println("command" + command);
@@ -50,6 +50,7 @@ public class RealMachine implements Runnable {
     }
     private void runVirtualMachines(){
         for (int i = 0; i < VMList.size(); i++){
+            
             System.out.println("doing Stuff");
         }
     }
