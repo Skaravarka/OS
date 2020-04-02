@@ -33,17 +33,11 @@ public class Main {
         System.out.println("AX:"+virtualMachine.getAx());
         System.out.println("BX:"+virtualMachine.getBx());
 
+        Thread RM1 = new Thread(new RealMachine());
+
+        RM1.start();
 
 
-        printHelp();
-        Scanner myS = new Scanner(System.in);
-        while(true){
-            String command = myS.nextLine();
-            if(command.equals("x")){
-                break;
-            }
-        }
-        myS.close();
     }
     public static void printHelp(){
         System.out.println("#####################");
