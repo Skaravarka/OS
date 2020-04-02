@@ -12,12 +12,12 @@ public class Memory{
        }
     }
 
-    public static Word getInstruction(int Cc){
+    public Word getInstruction(int Cc){
         return realMemory.get(Cc);
     }
 
-    public static int getInstructionCount(){
-        return realMemory.size()-1;
+    public void set(int value, Word word){
+        realMemory.set(value, word);
     }
 
     public int loadToMemory(String fileName) {
