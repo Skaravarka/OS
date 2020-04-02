@@ -30,7 +30,7 @@ public class Memory{
 
     public int loadToMemory(String fileName) {
         File file = new File(fileName);
-        int cc = 0;
+        int cc = 1;
         Scanner scanner;
         int segmentFlag = 0; //DATA CODE HALT
         try {
