@@ -5,19 +5,16 @@ import java.util.Scanner;
 
 public class VirtualMachine {
 
-    private int loaded;
     private int ax;
     private int bx;
     private int cc;
     private int sf;
     private int mp;
-    private Memory memory = new Memory();
+private Memory memory = new Memory();
     
     
-    public VirtualMachine(Memory memory, int loaded, int ax, int bx, int cc, int sf, int mp) {
-        setClearMemory();
+    public VirtualMachine(Memory memory, int ax, int bx, int cc, int sf, int mp) {
 
-        this.loaded = loaded;
         this.ax = ax;
         this.bx = bx;
         this.cc = cc;
@@ -32,15 +29,6 @@ public class VirtualMachine {
     }
     private Word getMemoryCell(int index){
         return virtualMemory.get(index);
-    }
-
-   
-    private void setClearMemory(){
-        for(int i = 0; i < 256; i++){
-            Word word = new Word();
-            word = Word.stringToWord("0000");
-            virtualMemory.add(word);
-        }
     }
 
     private boolean isRegister(String reg){
