@@ -82,6 +82,7 @@ private Memory memory = new Memory();
 
     //REGRETS
     public void doStep(){
+        
         String string = Word.wordToString(memory.getInstruction(getCc())).trim();
         if(isFinished(string)){
             System.out.println("No code left to execute, see yourselft out :)");
@@ -89,7 +90,7 @@ private Memory memory = new Memory();
         }
         incCc();
 
-        if (string.equals("ADD ")){
+        if (string.equals("ADD")){
             string = Word.wordToString(memory.getInstruction(getCc()));
             incCc();
             String Lside = string.substring(0, 2).trim();
@@ -157,7 +158,7 @@ private Memory memory = new Memory();
             }
             return;
         }
-        if (string.equals("SUB ")){
+        if (string.equals("SUB")){
             string = Word.wordToString(memory.getInstruction(getCc()));
             incCc();
             String Lside = string.substring(0, 2).trim();
@@ -225,7 +226,7 @@ private Memory memory = new Memory();
             }
             return;
         }
-        if (string.contains("MOR ")){
+        if (string.contains("MOR")){
             string = Word.wordToString(memory.getInstruction(getCc()));
             incCc();
             String Lside = string.substring(0, 2).trim();
@@ -265,7 +266,7 @@ private Memory memory = new Memory();
             }
             return;
         }
-        if (string.contains("EQL ")){
+        if (string.contains("EQL")){
             string = Word.wordToString(memory.getInstruction(getCc()));
             incCc();
             String Lside = string.substring(0, 2).trim();
@@ -305,7 +306,7 @@ private Memory memory = new Memory();
             }
             return;
         }
-        if (string.equals("LEA ")){
+        if (string.equals("LEA")){
             string = Word.wordToString(memory.getInstruction(getCc()));
             incCc();
             String Lside = string.substring(0, 2).trim();
@@ -367,7 +368,7 @@ private Memory memory = new Memory();
             }
             return;
         }
-        if(string.equals("MOV ")){
+        if(string.equals("MOV")){
             string = Word.wordToString(memory.getInstruction(getCc()));
             incCc();
             String Lside = string.substring(0, 2).trim();
@@ -390,11 +391,11 @@ private Memory memory = new Memory();
             }
             return;
         }
-        if (string.contains("GET ")){
+        if (string.contains("GET")){
             //Nusikelia po OS
             return;
         }
-        if (string.contains("PRR ")){
+        if (string.contains("PRR")){
             string = Word.wordToString(memory.getInstruction(getCc())).trim();
             incCc();
             System.out.println("Vykdoma PRR "+string);
@@ -412,34 +413,34 @@ private Memory memory = new Memory();
                 System.out.println("Turejai registra ivest");
             return;
         }
-        if (string.contains("PRS ")){
+        if (string.contains("PRS")){
             //Nusikelia po OS
             return;
         }
-        if (string.contains("WGD ")){
+        if (string.contains("WGD")){
             //Nusikelia po OS
             return;
         }
-        if (string.contains("RGD ")){
+        if (string.contains("RGD")){
             //Nusikelia po OS
             return;
         }
-        if (string.contains("LGD ")){
+        if (string.contains("LGD")){
             //Nusikelia po OS
             return;
         }
-        if (string.contains("UGD ")){
+        if (string.contains("UGD")){
             //Nusikelia po OS
             return;
         }
-        if (string.equals("JMP ")){
+        if (string.equals("JMP")){
             string = Word.wordToString(memory.getInstruction(getCc()));
             incCc();
             System.out.println("Vykdoma JMP "+string);
             setCc(Integer.parseInt(string));
             return;
         }
-        if (string.equals("JEZ ")){
+        if (string.equals("JEZ")){
             string = Word.wordToString(memory.getInstruction(getCc()));
             incCc();
             String Lside = string.substring(0, 2).trim();
@@ -469,7 +470,7 @@ private Memory memory = new Memory();
             }
             return;
         }
-        if (string.equals("JNZ ")){
+        if (string.equals("JNZ")){
             string = Word.wordToString(memory.getInstruction(getCc()));
             incCc();
             String Lside = string.substring(0, 2).trim();
@@ -499,7 +500,7 @@ private Memory memory = new Memory();
             }
             return;
         }
-        if (string.equals("JGZ ")){
+        if (string.equals("JGZ")){
             string = Word.wordToString(memory.getInstruction(getCc()));
             incCc();
             String Lside = string.substring(0, 2).trim();
@@ -529,7 +530,7 @@ private Memory memory = new Memory();
             }
             return;
         }
-        if (string.equals("JLZ ")){
+        if (string.equals("JLZ")){
             string = Word.wordToString(memory.getInstruction(getCc()));
             incCc();
             String Lside = string.substring(0, 2).trim();
@@ -559,7 +560,7 @@ private Memory memory = new Memory();
             }
             return;
             }
-            if (string.contains("END ")){
+            if (string.contains("END")){
                 //END();
                 return;
             }
