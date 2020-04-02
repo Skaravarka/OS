@@ -14,7 +14,11 @@ public class VirtualMachine {
     private int sf;
     private int mp;
 
-    public VirtualMachine(int loaded, int ax, int bx, int cc, int sf, int mp) {
+    Memory mem = new Memory();
+    
+    
+
+    public VirtualMachine(Memory mem, int loaded, int ax, int bx, int cc, int sf, int mp) {
         setClearMemory();
 
         this.loaded = loaded;
@@ -23,6 +27,8 @@ public class VirtualMachine {
         this.cc = cc;
         this.sf = sf;
         this.mp = mp;
+        
+        this.mem = mem;
     }
     public void printVirtualMemory(){
         for(int i = 0; i < 256; i++){
