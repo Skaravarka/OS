@@ -34,9 +34,9 @@ public class Main {
         mem.loadToMemory("2ND/PROGURAMUUWU.txt");
         mem.PrintAll();
         //virtualMachine.runProgram();
-        virtualMachine.doStep();
-        virtualMachine.doStep();
-        virtualMachine.doStep();
+        // virtualMachine.doStep();
+        // virtualMachine.doStep();
+        // virtualMachine.doStep();
 
         System.out.println(virtualMachine.getAx());
         System.out.println(virtualMachine.getBx());

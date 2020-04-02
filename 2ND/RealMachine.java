@@ -15,6 +15,7 @@ public class RealMachine implements Runnable {
         System.out.println("#####################");
         System.out.println("To quit press: x");
         System.out.println("To create VM press 1");
+        System.out.println("To run VM press 2");
     }
 
     private void addVirtualMachine() {
@@ -34,6 +35,7 @@ public class RealMachine implements Runnable {
         printHelp();
         
         while(true){
+            
             String command = consoleInputs.getLastCommand();
 
             if(command != null){
@@ -41,17 +43,27 @@ public class RealMachine implements Runnable {
                 if(command.equals("x")){
                     break;
                 }
+                if(command.equals("0")){
+                    printHelp();
+                }
                 if(command.equals("1")){
                     addVirtualMachine();
                 }
-            }
-            runVirtualMachines();
+                if(command.equals("2")){
+                    runVirtualMachines();
+                }
+            }       
         }
     }
     private void runVirtualMachines(){
         for (int i = 0; i < VMList.size(); i++){
-            
-            System.out.println("doing Stuff");
+            if(!VMList.get(i).isFinished()){
+                VMList.get(i).doStep();
+            }
         }
+        // do finnished stuff
+        System.out.println("finished");
     }
+    
+
 }
