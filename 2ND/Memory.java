@@ -20,12 +20,12 @@ public class Memory{
        }
     }
 
-    public static Word getInstruction(int Cc){
+    public Word getInstruction(int Cc){
         return Memory.get(Cc);
     }
 
-    public static int getInstructionCount(){
-        return Memory.size()-1;
+    public void set(int value, Word word){
+        Memory.set(value, word);
     }
 
     public int loadToMemory(String fileName) {
