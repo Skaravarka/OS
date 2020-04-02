@@ -51,6 +51,7 @@ public class Memory{
                     continue;
                 }
                 if(data.equals("HALT")){
+                    mem.set(i, Word.stringToWord("HALT"));
                     scanner.close();
                     return cc;
                 }
