@@ -27,6 +27,7 @@ public class Main {
         // virtualMachine.printVirtualMemory();
         
         System.out.println("Helllooo, Welcum to our computah");
+
         //System.out.println("Helllooo, Welcum to our computah");
         Memory mem = new Memory();
         //System.out.println(mem.loadToMemory("2ND/PROGURAMUUWU.txt"));

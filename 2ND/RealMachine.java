@@ -56,9 +56,11 @@ public class RealMachine implements Runnable {
                     printHelp();
                 }
                 if(command.equals("1")){
+                    System.out.println("added A Virtual Machine");
                     addVirtualMachine();
                 }
                 if(command.equals("2")){
+                    System.out.println("");
                     runVirtualMachines();
                 }
                 if(command.equals("3")){
@@ -77,14 +79,23 @@ public class RealMachine implements Runnable {
         System.out.println("oneStep");
     }
     private void runVirtualMachineTillCompletion(){
-        for(int t = DEFAULTTI;t > 0; t++){
+        for(int t = DEFAULTTI; t > 0; t++){
             for (int i = 0; i < VMList.size(); i++){
                 if(!VMList.get(i).isFinished()){
                     VMList.get(i).doStep();
+                    interuptManagement(VMList.get(i).getSf());
                 }
             }
         }
         System.out.println("finished");
     }
-
+    private void interuptManagement(int flag){
+        switch(flag){
+            case 39:
+                break;
+            case 78:
+                break;
+                
+        }
+    }
 }
