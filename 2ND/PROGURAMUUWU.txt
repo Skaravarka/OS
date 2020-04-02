@@ -1,5 +1,7 @@
 DATA
 MIAU
+AU  
+MUR 
 NULL
 CODE
 ADDV
@@ -12,4 +14,6 @@ PRR
 AX  
 MOV 
 AX0 
+PRS 
+AX  
 HALT

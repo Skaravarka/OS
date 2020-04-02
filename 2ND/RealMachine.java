@@ -11,6 +11,7 @@ public class RealMachine implements Runnable {
 
     private int TI = 0;
     private int[] ptr = new int[4];
+    private int ax = 0;
 
     public void printHelp() {
         System.out.println("#####################");
@@ -125,8 +126,18 @@ public class RealMachine implements Runnable {
                 System.out.println(VMList.get(i).getBx());
                 break;
             case 20:
+                ax = 0;
+                while(!Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getAx() + ax)).equals("NULL")){
+                    System.out.print(Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getAx() + ax)));
+                    ax++;
+                }
                 break;
             case 21:
+                ax = 0;
+                while(!Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getBx() + ax)).equals("NULL")){
+                    System.out.print(Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getBx() + ax)));
+                    ax++;
+                }
                 break;
                 
         }
