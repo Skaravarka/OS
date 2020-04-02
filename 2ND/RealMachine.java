@@ -42,7 +42,7 @@ public class RealMachine implements Runnable {
     }
 
     public void run() {
-
+        createMemory();
         try {
             consoleInputs = new ConsoleInputs();
         } catch (IOException e) {
