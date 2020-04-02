@@ -5,20 +5,16 @@ import java.util.Scanner;
 
 public class VirtualMachine {
 
-    private ArrayList<Word> virtualMemory = new ArrayList<Word>();
-
     private int loaded;
     private int ax;
     private int bx;
     private int cc;
     private int sf;
     private int mp;
-
-    Memory mem = new Memory();
+    private Memory memory = new Memory();
     
     
-
-    public VirtualMachine(Memory mem, int loaded, int ax, int bx, int cc, int sf, int mp) {
+    public VirtualMachine(Memory memory, int loaded, int ax, int bx, int cc, int sf, int mp) {
         setClearMemory();
 
         this.loaded = loaded;
@@ -27,8 +23,7 @@ public class VirtualMachine {
         this.cc = cc;
         this.sf = sf;
         this.mp = mp;
-        
-        this.mem = mem;
+        this.memory = memory;
     }
     public void printVirtualMemory(){
         for(int i = 0; i < 256; i++){
@@ -39,52 +34,7 @@ public class VirtualMachine {
         return virtualMemory.get(index);
     }
 
-    public int loadToMemory(String fileName) {
-        File file = new File(fileName);
-        Scanner scanner;
-        int segmentFlag = 0; //DATA CODE HALT
-        try {
-            scanner = new Scanner(file);
-            while(scanner.hasNextLine()){
-                String data = scanner.nextLine();
-                data.toUpperCase();
-                //System.out.println(data);
-                if(data.equals("DATA")){
-                    segmentFlag = 1;
-                    continue;
-                }
-                if(data.equals("CODE")){
-                    segmentFlag = 2;
-                    continue;
-                }
-                if(data.equals("HALT")){
-                    scanner.close();
-                    return -1;
-                }
-                if(segmentFlag == 1){
-                    //System.out.println(data);
-                    String[] parts = data.split(" ");
-                    while(parts[1].length() != 4){
-                        parts[1] = " " + parts[1];
-                    }
-                    virtualMemory.set(Integer.parseInt(parts[0]), Word.stringToWord(parts[1]));
-                    //System.out.println("final" + Word.wordToString(Word.stringToWord("ABCD")));
-                }
-                if(segmentFlag == 2){
-
-                }
-
-            }
-            scanner.close();
-            return -1;
-
-        } catch (FileNotFoundException e) {
-            
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
+   
     private void setClearMemory(){
         for(int i = 0; i < 256; i++){
             Word word = new Word();
