@@ -64,17 +64,11 @@ private Memory memory = new Memory();
         this.mp = mp;
     }
 
-    public boolean isFinished(String str){
-        if(str.equals("HALT")){
+    public boolean isFinished(){
+        if(Word.wordToString(memory.getInstruction(getCc())).trim().equals("HALT")){
             setCc(-10);
             return true;
         }
-        return false;
-    }
-
-    public boolean isFinished(){
-        if(getCc()<0)
-            return true;
         else
             return false;
     }
@@ -84,7 +78,7 @@ private Memory memory = new Memory();
     public void doStep(){
         
         String string = Word.wordToString(memory.getInstruction(getCc())).trim();
-        if(isFinished(string)){
+        if(isFinished()){
             System.out.println("No code left to execute, see yourselft out :)");
             return;
         }
