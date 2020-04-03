@@ -109,6 +109,7 @@ public class RealMachine implements Runnable {
     private void runVirtualMachines(){
         for (int i = 0; i < VMList.size(); i++){
             if(!VMList.get(i).isFinished()){
+                System.out.println("x");
                 VMList.get(i).doStep();
                 interuptManagement(VMList.get(i).getSf(), ptr[i], i);
 
@@ -126,7 +127,7 @@ public class RealMachine implements Runnable {
                 }
             }
         }
-        
+
         System.out.println("finished");
     }
     private void interuptManagement(int flag, int pt, int i){
