@@ -1,6 +1,6 @@
 DATA
 MIAU
-AU  
+ AU 
 MUR 
 NULL
 CODE
