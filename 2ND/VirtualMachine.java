@@ -65,7 +65,7 @@ private Memory memory = new Memory();
     }
 
     public boolean isFinished(){
-        if(Word.wordToString(memory.getInstruction(getCc())).trim().equals("HALT")){
+        if(getCc()>0 && Word.wordToString(memory.getInstruction(getCc())).trim().equals("HALT")){
             setCc(-10);
             return true;
         }
