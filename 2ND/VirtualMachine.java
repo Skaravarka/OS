@@ -89,6 +89,7 @@ private Memory memory = new Memory();
             return;
         }
         incCc();
+        setSf(0);
 
         if (string.equals("ADD")){
             string = Word.wordToString(memory.getInstruction(getCc()));
