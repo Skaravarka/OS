@@ -587,5 +587,4 @@ private Memory memory = new Memory();
             }
             System.out.println("Kaska neto ivedei");
     }
-
 }
