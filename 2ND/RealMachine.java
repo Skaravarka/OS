@@ -111,6 +111,7 @@ public class RealMachine implements Runnable {
             if(!VMList.get(i).isFinished()){
                 System.out.println("x");
                 VMList.get(i).doStep();
+                
                 interuptManagement(VMList.get(i).getSf(), ptr[i], i);
 
             }
