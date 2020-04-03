@@ -14,14 +14,14 @@ public class RealMachine implements Runnable {
     private int ax = 0;
 
     public void printHelp() {
-        System.out.println("#####################");
-        System.out.println("To quit press: x");
-        System.out.println("To create VM press 1");
-        System.out.println("To run VM press 2");
-        System.out.println("To run VM till to completion 3");
+        System.out.println("RM:#####################");
+        System.out.println("RM:To quit press: x");
+        System.out.println("RM:To create VM press 1");
+        System.out.println("RM:To run VM press 2");
+        System.out.println("RM:To run VM till to completion 3");
     }
     public void createMemory(){
-        for(int i = 0; i < 16; i++){
+        for(int i = 0; i < 8; i++){
             allMemory.add(new Memory());
         }
     }
@@ -29,17 +29,28 @@ public class RealMachine implements Runnable {
     private void addVirtualMachine() {
         Memory tempMem = new Memory();
         int cc = 0;
+
+        System.out.println("RM:Program name:");
+        String command = "";
+        while(command == "" || command == null){
+            command = consoleInputs.getLastCommand();
+        }
+        if(command.equals(" ")){
+            command = "PROGURAMUUWU.txt";
+        }
+        command = "2ND/" + command;
+
         for(int i = 0; i < 4; i++){
             if(ptr[i] == -1){
                 ptr[i] = i;
-                cc = allMemory.get(ptr[i]).loadToMemory("2ND/PROGURAMUUWU.txt");
+                cc = allMemory.get(ptr[i]).loadToMemory(command);
                 tempMem = allMemory.get(ptr[i]);
                 break;
             }
         }
         // cc = allMemory.get(0).loadToMemory("2ND/PROGURAMUUWU.txt");
         // tempMem = allMemory.get(0);
-        tempMem.PrintAll();
+        //tempMem.PrintAll();
         //System.out.println("cc" + cc);
 
         VMList.add(new VirtualMachine(tempMem, 0, 0, cc, 0, 0));
@@ -74,7 +85,7 @@ public class RealMachine implements Runnable {
             String command = consoleInputs.getLastCommand();
 
             if(command != null){
-                System.out.println("command" + command);
+                //System.out.println("command" + command);
                 if(command.equals("x")){
                     break;
                 }
@@ -83,7 +94,7 @@ public class RealMachine implements Runnable {
                 }
                 if(command.equals("1")){
                     addVirtualMachine();
-                    System.out.println("added A Virtual Machine");
+                    System.out.println("RM:added A Virtual Machine");
                 }
                 if(command.equals("2")){
                     System.out.println("");
@@ -138,8 +149,10 @@ public class RealMachine implements Runnable {
                     System.out.print(Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getBx() + ax)));
                     ax++;
                 }
-                break;
-                
+                break;       
         }
+    }
+    private Word getGeneralMemoryWord(int index){
+        return allMemory.get(7).getInstruction(index + 128);
     }
 }

@@ -6,6 +6,7 @@ public class Main {
     TODO: 
         setReadFile
         pager
+        interupt = 0
 
 
     */
