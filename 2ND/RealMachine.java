@@ -16,9 +16,11 @@ public class RealMachine implements Runnable {
     public void printHelp() {
         System.out.println("RM:#####################");
         System.out.println("RM:To quit press: x");
-        System.out.println("RM:To create VM press 1");
-        System.out.println("RM:To run VM press 2");
-        System.out.println("RM:To run VM till to completion 3");
+        System.out.println("RM:To show help press: 0");
+        System.out.println("RM:To create VM press: 1");
+        System.out.println("RM:To run VM press: 2");
+        System.out.println("RM:To run VM till to completion: 3");
+        System.out.println("RM:To terminate VMs: 4");
     }
     public void createMemory(){
         for(int i = 0; i < 8; i++){
@@ -35,7 +37,7 @@ public class RealMachine implements Runnable {
         while(command == "" || command == null){
             command = consoleInputs.getLastCommand();
         }
-        if(command.equals(" ")){
+        if(command.equals(" ") || command.equals("1")){
             command = "PROGURAMUUWU.txt";
         }
         command = "2ND/" + command;
@@ -103,6 +105,10 @@ public class RealMachine implements Runnable {
                 if(command.equals("3")){
                     runVirtualMachineTillCompletion();
                 }
+                if(command.equals("4")){
+                    VMList.clear();
+                    System.out.println("RM:Virtual Machines are terminated");
+                }
             }       
         }
     }
@@ -111,7 +117,7 @@ public class RealMachine implements Runnable {
             if(!VMList.get(i).isFinished()){
                 System.out.println("x");
                 VMList.get(i).doStep();
-                
+
                 interuptManagement(VMList.get(i).getSf(), ptr[i], i);
 
             }
@@ -128,25 +134,25 @@ public class RealMachine implements Runnable {
                 }
             }
         }
-
+        System.out.println(" ");
         System.out.println("finished");
     }
     private void interuptManagement(int flag, int pt, int i){
         switch(flag){
-            case 39:
+            case 39: // PRT AX
                 System.out.println(VMList.get(i).getAx());
                 break;
-            case 78:
+            case 78: // PRT BX
                 System.out.println(VMList.get(i).getBx());
                 break;
-            case 20:
-                ax = 0;
+            case 20: // PRS AX
+                ax = 0; 
                 while(!Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getAx() + ax)).equals("NULL")){
                     System.out.print(Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getAx() + ax)));
                     ax++;
                 }
                 break;
-            case 21:
+            case 21: //PRS BX
                 ax = 0;
                 while(!Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getBx() + ax)).equals("NULL")){
                     System.out.print(Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getBx() + ax)));
@@ -155,7 +161,7 @@ public class RealMachine implements Runnable {
                 break;       
         }
     }
-    private Word getGeneralMemoryWord(int index){
+    private Word getGMemoryWord(int index){
         return allMemory.get(7).getInstruction(index + 128);
     }
 }
