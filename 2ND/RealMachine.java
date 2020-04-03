@@ -126,6 +126,7 @@ public class RealMachine implements Runnable {
                 }
             }
         }
+        
         System.out.println("finished");
     }
     private void interuptManagement(int flag, int pt, int i){
