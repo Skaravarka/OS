@@ -11,7 +11,6 @@ public class VirtualMachine {
     private int sf;
     private int mp;
 private Memory memory = new Memory();
-private Memory globalMemory = new Memory();
     
     
     public VirtualMachine(Memory memory, Memory glb, int ax, int bx, int cc, int sf, int mp) {
@@ -21,7 +20,6 @@ private Memory globalMemory = new Memory();
         this.sf = sf;
         this.mp = mp;
         this.memory = memory;
-        this.globalMemory = glb;
     }
 
     private boolean isRegister(String reg){
