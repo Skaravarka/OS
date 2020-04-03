@@ -83,11 +83,11 @@ private Memory memory = new Memory();
     //REGRETS
     public void doStep(){
         
-        String string = Word.wordToString(memory.getInstruction(getCc())).trim();
         if(isFinished()){
             System.out.println("No code left to execute, see yourselft out :)");
             return;
         }
+        String string = Word.wordToString(memory.getInstruction(getCc())).trim();
         incCc();
         setSf(0);
 
