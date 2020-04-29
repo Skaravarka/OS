@@ -17,9 +17,8 @@ public class ConsoleInputs implements Runnable{
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
             try {
-                String temp = br.readLine();
+                command = br.readLine();
                 newInput = true;
-                command = temp;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -28,13 +27,17 @@ public class ConsoleInputs implements Runnable{
     public String getLastCommand(){
 
         if(newInput) {
-            String temp = command;
+            //String temp = command;
+            //clear();
             newInput = false;
-            return temp;
+            return command;
         }
         else return null;
     }
     public void killThread(){
         isAlive = false;
+    }
+    public void clear(){
+        command = null;
     }
 }
