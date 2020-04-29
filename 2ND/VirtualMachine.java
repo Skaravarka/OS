@@ -13,7 +13,7 @@ public class VirtualMachine {
     private Memory memory = new Memory();
     
     
-    public VirtualMachine(Memory memory, Memory glb, int ax, int bx, int cc, int sf, int mp) {
+    public VirtualMachine(Memory memory, int ax, int bx, int cc, int sf, int mp) {
         this.ax = ax;
         this.bx = bx;
         this.cc = cc;
