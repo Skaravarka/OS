@@ -10,6 +10,7 @@ public class VirtualMachine {
     private int cc;
     private int sf;
     private int mp;
+    private int ptr;
     private Memory memory = new Memory();
     
     
@@ -20,6 +21,14 @@ public class VirtualMachine {
         this.sf = sf;
         this.mp = mp;
         this.memory = memory;
+    }
+    public VirtualMachine() {
+        this.ax = 0;
+        this.bx = 0;
+        this.cc = 0;
+        this.sf = 0;
+        this.mp = 0;
+        this.memory = null;
     }
 
     private boolean isRegister(String reg){
@@ -44,6 +53,9 @@ public class VirtualMachine {
     public int getMp(){
         return mp;
     }
+    public int getPtr(){
+        return ptr;
+    }
 
     public void setAx(int ax){
         this.ax = ax;
@@ -62,6 +74,12 @@ public class VirtualMachine {
     }
     public void setMp(int mp){
         this.mp = mp;
+    }
+    public void setPtr(int ptr){
+        this.ptr = ptr;
+    }
+    public void setMemory(Memory memory){
+        this.memory = memory;
     }
 
     public boolean isFinished(){

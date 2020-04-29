@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class RealMachine implements Runnable {
 
@@ -11,7 +12,7 @@ public class RealMachine implements Runnable {
 
     private boolean mode = false;
     private int TI = 0;
-    private int[] ptr = new int[4]; // puslapio trasliacija
+    private int[] ptr = {0, 0, 0, 0, 0, 0, 0, 0}; // puslapio trasliacija
     private int sf = 0;
     private int ax = 0; // darbinis
     private int bx = 0; // darbinis
@@ -27,6 +28,7 @@ public class RealMachine implements Runnable {
     public void printHelp() {
         System.out.println("RM:#####################");
         System.out.println("RM:To quit press: x");
+        System.out.println("RM:Debug: a");
         System.out.println("RM:To show help press: 0");
         System.out.println("RM:To create VM press: 1");
         System.out.println("RM:To run VM press: 2");
@@ -34,6 +36,7 @@ public class RealMachine implements Runnable {
         System.out.println("RM:To terminate VMs: 4");
         System.out.println("RM:To print memory: 5");
         System.out.println("RM:To print registers: 6");
+        System.out.println("RM:Load to memory: 7");
     }
 
     public void createMemory() {
@@ -42,35 +45,122 @@ public class RealMachine implements Runnable {
         }
     }
 
-    private void addVirtualMachine() {
-        Memory tempMem = new Memory();
-        int cc = 0;
+    // private Memory writeIntoMemory(){
+    //     System.out.println("RM:Program name:");
+    //     String command = "";
+    //     while (command == "" || command == null) {
+    //         command = consoleInputs.getLastCommand();
+    //     }
+    //     if (command.equals(" ") || command.equals("1")) {
+    //         command = "PROGURAMUUWU.txt";
+    //     }
+    //     command = "OS/2ND/" + command;
 
+    // }
+    private int getRandomPage(){
+        int count = 0;
+        for(int i = 0; i < ptr.length; i++){
+            if(ptr[i] == 0){
+                count++;
+            }
+        }
+        if(count <= 0){
+            return -1;
+        }
+        Random rand = new Random();
+        int a = rand.nextInt(allMemory.size());
+        while(ptr[a] == 1){
+            a = rand.nextInt(allMemory.size());
+        }
+        ptr[a] = 1;
+        // for(int i = 0; i < ptr.length; i++){
+        //     System.out.print(ptr[i]);
+        // }
+        System.out.println("");
+        return a;
+    }
+    private void setPtr(int num){
+
+    }
+
+    private void addVirtualMachine() {
+        // System.out.println("RM:Program name:");
+        // String command = "";
+        // while (command == "" || command == null) {
+        //     command = consoleInputs.getLastCommand();
+        // }
+        // if (command.equals(" ") || command.equals("1")) {
+        //     command = "PROGURAMUUWU.txt";
+        // }
+        // command = "OS/2ND/" + command;
+
+        // for (int i = 0; i < 4; i++) {
+        //     if (ptr[i] == -1) {
+        //         ptr[i] = i;
+        //         cc = allMemory.get(ptr[i]).loadToMemory(command);
+        //         tempMem = allMemory.get(ptr[i]);
+        //         break;
+        //     }
+        // }
+        // cc = allMemory.get(0).loadToMemory("2ND/PROGURAMUUWU.txt");
+        // tempMem = allMemory.get(0);
+        // tempMem.PrintAll();
+        // System.out.println("cc" + cc);
+        int page = getRandomPage();
+        VirtualMachine virtualMachine = new VirtualMachine();
+        virtualMachine.setPtr(page);
+
+        VMList.add(virtualMachine);
+    }
+
+    private void loadToMemory(){
+        String command = consoleInputs.getLastCommand();
+        int num = -1;
+        System.out.println("RM:Free memories:");
+        for(int i = 0; i < ptr.length; i++){
+            if(ptr[i] == 0){
+                System.out.print(i + " ");
+            }
+        }
+        System.out.println("");
+        while(true){
+            command = consoleInputs.getLastCommand();
+            if(command != null && !command.equals("")){
+                num = Integer.parseInt(command);   
+            }
+            if(num >= 0 && num < ptr.length){
+                if(ptr[num] == 0){
+                    break;
+                }
+            }
+        }
         System.out.println("RM:Program name:");
-        String command = "";
+        command = "";
         while (command == "" || command == null) {
             command = consoleInputs.getLastCommand();
         }
         if (command.equals(" ") || command.equals("1")) {
             command = "PROGURAMUUWU.txt";
         }
-        command = "OS/2ND/" + command;
+        command = "2ND/" + command;
 
-        for (int i = 0; i < 4; i++) {
-            if (ptr[i] == -1) {
-                ptr[i] = i;
-                cc = allMemory.get(ptr[i]).loadToMemory(command);
-                tempMem = allMemory.get(ptr[i]);
-                break;
-            }
+        allMemory.get(num).loadToMemory(command);
+
+        System.out.println("RM:Available VMs:");
+        for(int i = 0; i < VMList.size(); i++){
+            System.out.print(i);
         }
-        // cc = allMemory.get(0).loadToMemory("2ND/PROGURAMUUWU.txt");
-        // tempMem = allMemory.get(0);
-        // tempMem.PrintAll();
-        // System.out.println("cc" + cc);
-
-        VMList.add(new VirtualMachine(tempMem, 0, 0, cc, 0, 0));
+        System.out.println("");
+        command = "";
+        while (command == "" || command == null) {
+            command = consoleInputs.getLastCommand();
+        }
+        int numVM = Integer.parseInt(command);
+        //VMList.get(numVM).setPtr(num);
+        allMemory.get(VMList.get(numVM).getPtr()).set(0, Word.stringToWord("   "+Integer.toString(num)));
+        System.out.println("RM:Done");
     }
+
 
     private void waitABit() {
         try {
@@ -82,10 +172,6 @@ public class RealMachine implements Runnable {
 
     public void run() {
         createMemory();
-        ptr[0] = -1;
-        ptr[1] = -1;
-        ptr[2] = -1;
-        ptr[3] = -1;
         try {
             consoleInputs = new ConsoleInputs();
         } catch (IOException e) {
@@ -108,6 +194,9 @@ public class RealMachine implements Runnable {
                 if (command.equals("0")) {
                     printHelp();
                 }
+                if (command.equals("a")) {
+                    getRandomPage();
+                }
                 if (command.equals("1")) {
                     addVirtualMachine();
                     System.out.println("RM:added A Virtual Machine");
@@ -129,6 +218,9 @@ public class RealMachine implements Runnable {
                 if (command.equals("6")) {
                     printRegisters();
                 }
+                if (command.equals("7")) {
+                    loadToMemory();
+                }
             }
         }
         try {
@@ -145,7 +237,7 @@ public class RealMachine implements Runnable {
                 System.out.println("x");
                 VMList.get(i).doStep();
 
-                interuptManagement(VMList.get(i).getSf(), ptr[i], i);
+                //interuptManagement(VMList.get(i).getSf(), ptr[i], i);
 
             }
         }
@@ -157,7 +249,7 @@ public class RealMachine implements Runnable {
             for (int i = 0; i < VMList.size(); i++){
                 if(!VMList.get(i).isFinished()){
                     VMList.get(i).doStep();
-                    interuptManagement(VMList.get(i).getSf(), ptr[i], i);
+                    //interuptManagement(VMList.get(i).getSf(), ptr[i], i);
                 }
             }
         }
@@ -211,10 +303,7 @@ public class RealMachine implements Runnable {
         System.out.print(" |DC: ");
         System.out.print(dc);
         System.out.print(" |PTR: ");
-        System.out.print(ptr[0]);
-        System.out.print(ptr[1]);
-        System.out.print(ptr[2]);
-        System.out.print(ptr[3]);
+        System.out.print(ptr);
         System.out.print(" |MP: ");
         System.out.print(mp);
         System.out.println("");
@@ -228,5 +317,7 @@ public class RealMachine implements Runnable {
         System.out.print(dx);
         System.out.print(" |CHR: ");
         System.out.print(chr);
+        System.out.print(" |EI: ");
+        System.out.print(ei);
     }
 }
