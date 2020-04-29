@@ -6,13 +6,14 @@ import java.util.ArrayList;
 public class ConsoleInputs implements Runnable{
     volatile String  command = null;
     volatile boolean newInput = false;
+    volatile boolean isAlive = true;
 
     ArrayList<String> commandList = new ArrayList<String>();
 
     public ConsoleInputs() throws IOException {
     }
     public void run(){
-        while(true) {
+        while(isAlive) {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
             try {
@@ -32,5 +33,8 @@ public class ConsoleInputs implements Runnable{
             return temp;
         }
         else return null;
+    }
+    public void killThread(){
+        isAlive = false;
     }
 }

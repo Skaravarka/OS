@@ -20,6 +20,22 @@ public class Memory{
        }
     }
 
+    public void printAllNicely(int start){
+        start = start * 16 * 16;
+        String temp;
+        for(int i = 0; i < 16; i++){
+            temp = Integer.toHexString(i * 16 + start);
+            while(temp.length() < 3){
+                temp = "0" + temp;
+            }
+            System.out.print(temp + " ");
+            for(int j = 0; j < 16; j++){
+                System.out.print(Word.wordToString(mem.get(i * 16  + j)) + " ");
+            }
+            System.out.println("");
+        }
+    }
+
     public Word getInstruction(int Cc){
         return mem.get(Cc);
     }
