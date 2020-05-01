@@ -8,7 +8,7 @@ ADDV
 AX12
 SUBV
 AX3 
-LEA   
+LEA 
 BXAX
 PRR 
 AX  

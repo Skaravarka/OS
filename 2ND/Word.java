@@ -61,7 +61,9 @@ public class Word {
         Word tempWord = new Word();
         int ascii = 0;
         if(string.length() > SIZE){
-            System.out.println("Error");     
+            System.out.println("Error, string length is:"+string.length()+", should be <=4");
+            System.out.println("Taking only first 4 characters of '"+string+"'");
+            string = string.substring(0, 4);     
         }
         for(int i = 0; i < SIZE; i++){
             ascii = ascii * 100;

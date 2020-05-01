@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public class Main {
 
     /*
@@ -7,6 +5,12 @@ public class Main {
         setReadFile
         pager
         interupt = 0
+
+        Changes:
+        Added: Handling strings that are too long in stringToWord
+        Added: Reading entire program to memory
+        Added: Vm set Cc after loading program
+
 
 
     */
