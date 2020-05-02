@@ -44,6 +44,47 @@ public class Memory{
         mem.set(value, word);
     }
 
+    public int getInstructionCount(String fileName){
+        File file = new File(fileName);
+        int cc = 0;
+        Scanner scanner;
+        int segmentFlag = 0; //DATA CODE HALT
+        try {
+            scanner = new Scanner(file);
+            while(scanner.hasNextLine()){
+                String data = scanner.nextLine();
+                data = data.toUpperCase();
+
+                if(data.equals("DATA")){
+                    cc++;
+                    segmentFlag = 1;
+                    continue;
+                }
+                if(data.equals("CODE")){
+                    cc++;
+                    segmentFlag = 2;
+                    continue;
+                }
+                if(data.equals("HALT")){
+                    scanner.close();
+                    return cc;
+                }
+                if(segmentFlag == 1){
+                    cc++;
+                    continue;
+                }
+                if(segmentFlag == 2){
+                    continue;
+                }
+            }
+            scanner.close();
+            return -1;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     public int loadToMemory(String fileName) {
         File file = new File(fileName);
         int cc = 0;
@@ -58,11 +99,15 @@ public class Memory{
                 
                 if(data.equals("DATA")){
                     //cc++;
+                    mem.set(i, Word.stringToWord(data));
+                    i++;
                     segmentFlag = 1;
                     continue;
                 }
                 if(data.equals("CODE")){
                     //cc++;
+                    mem.set(i, Word.stringToWord(data));
+                    i++;
                     segmentFlag = 2;
                     continue;
                 }
