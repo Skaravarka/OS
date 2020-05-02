@@ -124,10 +124,6 @@ public class RealMachine implements Runnable {
         }
         System.out.println("");
         while(true){
-            // command = consoleInputs.getLastCommand();
-            // if(command != null && !command.equals("")){
-            //     num = Integer.parseInt(command);   
-            // }
             num = Integer.parseInt(getConsoleCommand());
             if(num >= 0 && num < ptr.length){
                 if(ptr[num] == 0){
@@ -137,10 +133,6 @@ public class RealMachine implements Runnable {
         }
         ptr[num] = 1;
         System.out.println("RM:Program name:");
-        // command = "";
-        // while (command == "" || command == null) {
-        //     command = consoleInputs.getLastCommand();
-        // }
         command = getConsoleCommand();
         if (command.equals(" ") || command.equals("1")) {
             command = "PROGURAMUUWU.txt";
@@ -152,10 +144,6 @@ public class RealMachine implements Runnable {
         System.out.println("RM:Available VMs:");
         printVMlist();
         System.out.println("");
-        // command = "";
-        // while (command == "" || command == null) {
-        //     command = consoleInputs.getLastCommand();
-        // }
         command = getConsoleCommand();
         int numVM = Integer.parseInt(command);
         //VMList.get(numVM).setPtr(num);
