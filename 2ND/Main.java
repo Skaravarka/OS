@@ -7,9 +7,11 @@ public class Main {
         interupt = 0
 
         Changes:
-        Added: Handling strings that are too long in stringToWord
-        Added: Reading entire program to memory
-        Added: Vm set Cc after loading program
+        Added: Run till complete functionality
+
+
+        Btw MOR ir EQL komandos don't do shit
+        Jos setina sf, prilausomai true ar false, kas is to XD
 
 
 

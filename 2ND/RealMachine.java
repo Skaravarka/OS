@@ -277,16 +277,18 @@ public class RealMachine implements Runnable {
         // do finnished stuff
     }
     private void runVirtualMachineTillCompletion(){
-        for(int t = DEFAULTTI; t > 0; t++){
-            for (int i = 0; i < VMList.size(); i++){
-                if(!isFinished(i)){
-                    ///////////////////////////////////////////////////////////VMList.get(i).doStep();
-                    //interuptManagement(VMList.get(i).getSf(), ptr[i], i);
-                }
+        for (int i = 0; i < VMList.size(); i++){
+            while(! isFinished(i)){
+                System.out.println("Doing a step, executing line: "+(VMList.get(i).getCc()+1));
+                doStep(i);
+                //VMList.get(i).doStep();
+
+                //interuptManagement(VMList.get(i).getSf(), ptr[i], i);
+
             }
+            System.out.println("VM nr: "+i+" has finished");
+            
         }
-        System.out.println(" ");
-        System.out.println("finished");
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void doStep(int VMNum){
@@ -422,6 +424,7 @@ public class RealMachine implements Runnable {
             }
             else{
                 System.out.println("Left side is not a register, refer to docs");
+                this.ei = 3;
             }
             return;
         }
@@ -444,6 +447,7 @@ public class RealMachine implements Runnable {
             }
             else{
                 System.out.println("Left side is not a register, refer to docs");
+                this.ei = 3;
             }
             return;
         }
@@ -490,6 +494,7 @@ public class RealMachine implements Runnable {
             }
             else{
                 System.out.println("Left side is not a register, refer to docs");
+                this.ei = 3;
             }
             return;
         }
@@ -512,6 +517,7 @@ public class RealMachine implements Runnable {
             }
             else{
                 System.out.println("Left side is not a register, refer to docs");
+                this.ei = 3;
             }
             return;
         }
@@ -552,6 +558,7 @@ public class RealMachine implements Runnable {
             }
             else{
                 System.out.println("One of the operands are not registers AX or BX");
+                this.ei = 3;
             }
             return;
         }
@@ -592,6 +599,7 @@ public class RealMachine implements Runnable {
             }
             else{
                 System.out.println("One of the operands are not registers AX or BX");
+                this.ei = 3;
             }
             return;
         }
@@ -683,17 +691,17 @@ public class RealMachine implements Runnable {
             }
             return;
         }
-        //TODO:GET REWRITE BITCH
         if (string.contains("GET")){
             //GET value, returns pointer in AX 1<value<16
             string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc());
             VMList.get(VMNum).incCc();
-            System.out.println("Vykdoma MOV "+string);
+            System.out.println("Vykdoma GET "+string);
             if(Integer.parseInt(string)<1 || Integer.parseInt(string)>16){
                 System.out.println("GET out of bounds, should be [1, 16] you donkey");
+                this.ei = 3;
             }
             else{
-                VMList.get(VMNum).setSf(Integer.parseInt(string));
+                this.ii = 9;
             }
             return;
         }
@@ -704,15 +712,16 @@ public class RealMachine implements Runnable {
             if(isVMRegister(string)){
                 if(string.equals("AX")){
                     //PRR AX
-                    VMList.get(VMNum).setSf(39);
+                    this.ii = 1;
                 }
                 else{
                     //PRR BX
-                    VMList.get(VMNum).setSf(78);
+                    this.ii = 2;
                 }
             }
             else
                 System.out.println("Turejai registra ivest tu asilo berete");
+                this.ei = 3;
             return;
         }
         if (string.contains("PRS")){
@@ -723,15 +732,16 @@ public class RealMachine implements Runnable {
             if(isVMRegister(string)){
                 if(string.equals("AX")){
                     //PRS AX
-                    VMList.get(VMNum).setSf(20);
+                    this.ii = 3;
                 }
                 else{
                     //PRS BX
-                    VMList.get(VMNum).setSf(21);
+                    this.ii = 4;
                 }
             }
             else{
                 System.out.println("Should be a register you mofo");
+                this.ei = 3;
             }
             return;
         }
@@ -766,6 +776,7 @@ public class RealMachine implements Runnable {
             System.out.println("Vykdoma JEZ "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
                 System.out.println("Lside should not be a register");
+                this.ei = 3;
             }
             else{
                 if(isVMRegister(Rside)){
@@ -784,6 +795,7 @@ public class RealMachine implements Runnable {
                 }
                 else{
                     System.out.println("Rside should be a register");
+                    this.ei = 3;
                 }
             }
             return;
@@ -796,6 +808,7 @@ public class RealMachine implements Runnable {
             System.out.println("Vykdoma JNZ "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
                 System.out.println("Lside should not be a register");
+                this.ei = 3;
             }
             else{
                 if(isVMRegister(Rside)){
@@ -814,6 +827,7 @@ public class RealMachine implements Runnable {
                 }
                 else{
                     System.out.println("Rside should be a register");
+                    this.ei = 3;
                 }
             }
             return;
@@ -826,6 +840,7 @@ public class RealMachine implements Runnable {
             System.out.println("Vykdoma JGZ "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
                 System.out.println("Lside should not be a register");
+                this.ei = 3;
             }
             else{
                 if(isVMRegister(Rside)){
@@ -844,6 +859,7 @@ public class RealMachine implements Runnable {
                 }
                 else{
                     System.out.println("Rside should be a register");
+                    this.ei = 3;
                 }
             }
             return;
@@ -856,6 +872,7 @@ public class RealMachine implements Runnable {
             System.out.println("Vykdoma JLZ "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
                 System.out.println("Lside should not be a register");
+                this.ei = 3;
             }
             else{
                 if(isVMRegister(Rside)){
@@ -874,6 +891,7 @@ public class RealMachine implements Runnable {
                 }
                 else{
                     System.out.println("Rside should be a register");
+                    this.ei = 3;
                 }
             }
             return;
@@ -883,6 +901,7 @@ public class RealMachine implements Runnable {
                 return;
             }
             System.out.println("Kaska neto ivedei");
+            this.ei = 2;
     }
 
 }
