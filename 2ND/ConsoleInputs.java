@@ -3,8 +3,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class ConsoleInputs implements Runnable{
-    volatile String  command = null;
+public class ConsoleInputs implements Runnable {
+    volatile String command = null;
     volatile boolean newInput = false;
     volatile boolean isAlive = true;
 
@@ -12,8 +12,9 @@ public class ConsoleInputs implements Runnable{
 
     public ConsoleInputs() throws IOException {
     }
-    public void run(){
-        while(isAlive) {
+
+    public void run() {
+        while (isAlive) {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
             try {
@@ -24,16 +25,19 @@ public class ConsoleInputs implements Runnable{
             }
         }
     }
-    public String getLastCommand(){
 
-        if(newInput) {
-            //String temp = command;
-            //clear();
+    public String getLastCommand() {
+
+        if (newInput) {
+            // String temp = command;
+            // clear();
             newInput = false;
             return command;
-        }
-        else return null;
+        } else
+            return null;
     }
+
+
     public void killThread(){
         isAlive = false;
     }

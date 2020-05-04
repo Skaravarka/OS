@@ -8,11 +8,13 @@ public class RealMachine implements Runnable {
     ArrayList<VirtualMachine> VMList = new ArrayList<VirtualMachine>();
     private Thread consoleInputsThread;
     private ConsoleInputs consoleInputs;
+    private Thread consoleOutputThread;
+    private ConsoleOutput consoleOutputs;
     private int DEFAULTTI = 50;
 
     private boolean mode = false;
     private int TI = 0;
-    private int[] ptr = {0, 0, 0, 0, 0, 0, 0, 0}; // puslapio trasliacija
+    private int[] ptr = { 0, 0, 0, 0, 0, 0, 0, 0 }; // puslapio trasliacija
     private int sf = 0;
     private int ax = 0; // darbinis
     private int bx = 0; // darbinis
@@ -26,26 +28,27 @@ public class RealMachine implements Runnable {
     private int ei = 0; // error'u
 
     public void printHelp() {
-        System.out.println("RM:#####################");
-        System.out.println("RM:To quit press: x");
-        System.out.println("RM:Debug: a");
-        System.out.println("RM:To show help press: 0");
-        System.out.println("RM:To create VM press: 1");
-        System.out.println("RM:To run VM press: 2");
-        System.out.println("RM:To run VM till completion: 3");
-        System.out.println("RM:To terminate VMs: 4");
-        System.out.println("RM:To print memory: 5");
-        System.out.println("RM:To print registers: 6");
-        System.out.println("RM:Load to memory: 7");
-        System.out.println("RM:To print VM list: 8");
-        System.out.println("RM:To print VM memory: 9");
-        System.out.println("RM:To print VM registers: q");
+        printToConsole("RM:#####################");
+        printToConsole("RM:To quit press: x");
+        printToConsole("RM:Debug: a");
+        printToConsole("RM:To show help press: 0");
+        printToConsole("RM:To create VM press: 1");
+        printToConsole("RM:To run VM press: 2");
+        printToConsole("RM:To run VM till completion: 3");
+        printToConsole("RM:To terminate VMs: 4");
+        printToConsole("RM:To print memory: 5");
+        printToConsole("RM:To print registers: 6");
+        printToConsole("RM:Load to memory: 7");
+        printToConsole("RM:To print VM list: 8");
+        printToConsole("RM:To print VM memory: 9");
+        printToConsole("RM:To print VM registers: q");
     }
-    public void printVMlist(){
-        for(int i = 0; i < VMList.size(); i++){
+
+    public void printVMlist() {
+        for (int i = 0; i < VMList.size(); i++) {
             System.out.print(i + " ");
         }
-        System.out.println("");
+        printToConsole("");
     }
 
     public void createMemory() {
@@ -53,30 +56,41 @@ public class RealMachine implements Runnable {
             allMemory.add(new Memory());
         }
     }
-    private boolean isWorkingRegister(String reg){
-        if(reg.equals("AX") || reg.equals("BX") || reg.equals("CX") || reg.equals("DX")){
+
+    private boolean isWorkingRegister(String reg) {
+        if (reg.equals("AX") || reg.equals("BX") || reg.equals("CX") || reg.equals("DX")) {
             return true;
         }
         return false;
     }
-    private boolean isVMRegister(String reg){
-        if(reg.equals("AX") || reg.equals("BX")){
+
+    private boolean isVMRegister(String reg) {
+        if (reg.equals("AX") || reg.equals("BX")) {
             return true;
         }
         return false;
     }
-    private String paging(int ptr, int cc){
-        //Integer.parseInt(Word.wordToString(allMemory.get(ptr).getInstruction(0)));
-        return Word.wordToString(allMemory.get(Integer.parseInt(Word.wordToString(allMemory.get(ptr).getInstruction(0)).trim())).getInstruction(cc));
-    
+
+    private String paging(int ptr, int cc) {
+        // Integer.parseInt(Word.wordToString(allMemory.get(ptr).getInstruction(0)));
+        return Word.wordToString(
+                allMemory.get(Integer.parseInt(Word.wordToString(allMemory.get(ptr).getInstruction(0)).trim()))
+                        .getInstruction(cc));
+
     }
-    private String getConsoleCommand(){
-        while(true){
+
+    private String getConsoleCommand() {
+        while (true) {
             String command = consoleInputs.getLastCommand();
-            if(command != null && !command.equals("")){
+            if (command != null && !command.equals("")) {
                 return command;
             }
-        }   
+        }
+    }
+
+    private void printToConsole(String string) {
+        consoleOutputs.sendToOutput(string);
+        waitABit();
     }
 
     private int getRandomPage(){
@@ -98,25 +112,25 @@ public class RealMachine implements Runnable {
         // for(int i = 0; i < ptr.length; i++){
         //     System.out.print(ptr[i]);
         // }
-        System.out.println("");
+        printToConsole("");
         return a;
     }
     private void printVMMemory(){
-        System.out.println("RM: Available VMs:");
+        printToConsole("RM: Available VMs:");
         printVMlist();
         int command = Integer.parseInt(getConsoleCommand());
-        System.out.println("RM:Page list");
+        printToConsole("RM:Page list");
         allMemory.get(VMList.get(command).getPtr()).printAllNicely(0);
-        System.out.println("RM:Memory");
+        printToConsole("RM:Memory");
         allMemory.get(Integer.parseInt(Word.wordToString(allMemory.get(VMList.get(command).getPtr()).getInstruction(0)).trim())).printAllNicely(0);
 
     }
 
     private void printVmRegisters(){
-        System.out.println("RM: Available VMs:");
+        printToConsole("RM: Available VMs:");
         printVMlist();
         int command = Integer.parseInt(getConsoleCommand());
-        System.out.println("Virtual machine nr: "+command+" registers:");
+        printToConsole("Virtual machine nr: "+command+" registers:");
         VMList.get(command).printAllRegisters();
     }
 
@@ -131,13 +145,13 @@ public class RealMachine implements Runnable {
     private void loadToMemory(){
         String command = consoleInputs.getLastCommand();
         int num = -1;
-        System.out.println("RM:Free memories:");
+        printToConsole("RM:Free memories:");
         for(int i = 0; i < ptr.length; i++){
             if(ptr[i] == 0){
                 System.out.print(i + " ");
             }
         }
-        System.out.println("");
+        printToConsole("");
         while(true){
             num = Integer.parseInt(getConsoleCommand());
             if(num >= 0 && num < ptr.length){
@@ -147,20 +161,20 @@ public class RealMachine implements Runnable {
             }
         }
         ptr[num] = 1;
-        System.out.println("RM:Program name:");
+        printToConsole("RM:Program name:");
         command = getConsoleCommand();
         if (command.equals(" ") || command.equals("1")) {
             command = "PROGURAMUUWU.txt";
-            System.out.println("Loading default 'PROGURAMUUWU.txt'");
+            printToConsole("Loading default 'PROGURAMUUWU.txt'");
         }
         command = "2ND/" + command;
 
         int instructinCount = allMemory.get(num).getInstructionCount(command);
         allMemory.get(num).loadToMemory(command);
 
-        System.out.println("RM:Available VMs:");
+        printToConsole("RM:Available VMs:");
         printVMlist();
-        System.out.println("");
+        printToConsole("");
         command = getConsoleCommand();
         int numVM = Integer.parseInt(command);
         //VMList.get(numVM).setPtr(num);
@@ -168,28 +182,33 @@ public class RealMachine implements Runnable {
         VMList.get(numVM).setCc(instructinCount);
     }
 
-
-    private void waitABit() {
+    private synchronized void waitABit() {
         try {
-            wait(20);
+            wait(40);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     private void debug(){
-        doStep(0);
+        printToConsole("miau");
+        printToConsole("test");
+        printToConsole("kek");
     }
 
     public void run() {
         createMemory();
         try {
             consoleInputs = new ConsoleInputs();
+            consoleOutputs = new ConsoleOutput(); 
         } catch (IOException e) {
             e.printStackTrace();
         }
         consoleInputsThread = new Thread(consoleInputs);
         consoleInputsThread.start();
+
+        consoleOutputThread = new Thread(consoleOutputs);
+        consoleOutputThread.start();
 
         printHelp();
 
@@ -199,7 +218,7 @@ public class RealMachine implements Runnable {
             String command = getConsoleCommand();
 
             if (command != null) {
-                // System.out.println("command" + command);
+                // printToConsole("command" + command);
                 if (command.equals("x")) {
                     break;
                 }
@@ -211,11 +230,11 @@ public class RealMachine implements Runnable {
                 }
                 if (command.equals("1")) {
                     addVirtualMachine();
-                    System.out.println("RM:added A Virtual Machine");
-                    System.out.println("RM:Done");
+                    printToConsole("RM:added A Virtual Machine");
+                    printToConsole("RM:Done");
                 }
                 if (command.equals("2")) {
-                    System.out.println("");
+                    printToConsole("");
                     runVirtualMachines();
                 }
                 if (command.equals("3")) {
@@ -223,47 +242,49 @@ public class RealMachine implements Runnable {
                 }
                 if (command.equals("4")) {
                     VMList.clear();
-                    System.out.println("RM:Virtual Machines are terminated");
-                    System.out.println("RM:Done");
+                    printToConsole("RM:Virtual Machines are terminated");
+                    printToConsole("RM:Done");
                 }
                 if (command.equals("5")) {
                     printMemory();
-                    System.out.println("RM:Done");
+                    printToConsole("RM:Done");
                 }
                 if (command.equals("6")) {
                     printRegisters();
-                    System.out.println("RM:Done");
+                    printToConsole("RM:Done");
                 }
                 if (command.equals("7")) {
                     loadToMemory();
-                    System.out.println("RM:Done");
+                    printToConsole("RM:Done");
                 }
                 if (command.equals("8")) {
                     printVMlist();
-                    System.out.println("RM:Done");
+                    printToConsole("RM:Done");
                 }
                 if (command.equals("9")) {
                     printVMMemory();
-                    System.out.println("RM:Done");
+                    printToConsole("RM:Done");
                 }
                 if (command.equals("q")){
                     printVmRegisters();
-                    System.out.println("RM:Done");
+                    printToConsole("RM:Done");
                 }
             }
         }
         try {
             consoleInputs.killThread();
             consoleInputsThread.join();
+            consoleOutputs.killThread();
+            consoleOutputThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("maiu");
+        printToConsole("maiu");
     }
     private void runVirtualMachines(){
         for (int i = 0; i < VMList.size(); i++){
             if(! isFinished(i)){
-                System.out.println("Doing a step, executing line: "+(VMList.get(i).getCc()+1));
+                printToConsole("Doing a step, executing line: "+(VMList.get(i).getCc()+1));
                 doStep(i);
                 //VMList.get(i).doStep();
 
@@ -271,7 +292,7 @@ public class RealMachine implements Runnable {
 
             }
             else{
-                System.out.println("VM nr: "+i+" has finished");
+                printToConsole("VM nr: "+i+" has finished");
             }
         }
         // do finnished stuff
@@ -279,21 +300,23 @@ public class RealMachine implements Runnable {
     private void runVirtualMachineTillCompletion(){
         for (int i = 0; i < VMList.size(); i++){
             while(! isFinished(i)){
-                System.out.println("Doing a step, executing line: "+(VMList.get(i).getCc()+1));
+                printToConsole("Doing a step, executing line: "+(VMList.get(i).getCc()+1));
                 doStep(i);
                 //VMList.get(i).doStep();
 
                 //interuptManagement(VMList.get(i).getSf(), ptr[i], i);
 
             }
-            System.out.println("VM nr: "+i+" has finished");
+            printToConsole("VM nr: "+i+" has finished");
             
         }
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void doStep(int VMNum){
-        System.out.println("Doing Vm nr:"+VMNum+" step");
+        printToConsole("Doing Vm nr:"+VMNum+" step");
         executeCommand(VMNum);
+        processErrors();
+        processInterupts();
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public boolean isFinished(int VMNum){
@@ -304,33 +327,72 @@ public class RealMachine implements Runnable {
             return false;
         }
     }
-    private void interuptManagement(int flag, int pt, int i){
-        switch(flag){
-            case 39: // PRT AX
-                System.out.println(VMList.get(i).getAx());
+    private void processInterupts(){
+        switch(ii){
+            case 1:
                 break;
-            case 78: // PRT BX
-                System.out.println(VMList.get(i).getBx());
+            case 2:
                 break;
-            case 20: // PRS AX
-                ax = 0; 
-                while(!Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getAx() + ax)).equals("NULL")){
-                    System.out.print(Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getAx() + ax)));
-                    ax++;
-                }
+            case 3:
                 break;
-            case 21: //PRS BX
-                ax = 0;
-                while(!Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getBx() + ax)).equals("NULL")){
-                    System.out.print(Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getBx() + ax)));
-                    ax++;
-                }
-                break;       
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            case 8:
+                break;
+            case 9:
+                break;
+            default:
+                break;
         }
     }
-    private Word getGMemoryWord(int index){
-        return allMemory.get(7).getInstruction(index + 128);
+    private void processErrors(){
+        switch(ei){
+            case 1:
+                printToConsole("RM:Semafores are shit :D");
+                break;
+            case 2:
+                printToConsole("RM:Bad command");
+                break;
+            case 3:
+                printToConsole("RM:Bad Operant");
+                break;
+            default:
+                break;
+        }
     }
+    // private void interuptManagement(int flag, int pt, int i){
+    //     switch(flag){
+    //         case 39: // PRT AX
+    //             printToConsole(VMList.get(i).getAx());
+    //             break;
+    //         case 78: // PRT BX
+    //             printToConsole(VMList.get(i).getBx());
+    //             break;
+    //         case 20: // PRS AX
+    //             ax = 0; 
+    //             while(!Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getAx() + ax)).equals("NULL")){
+    //                 System.out.print(Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getAx() + ax)));
+    //                 ax++;
+    //             }
+    //             break;
+    //         case 21: //PRS BX
+    //             ax = 0;
+    //             while(!Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getBx() + ax)).equals("NULL")){
+    //                 System.out.print(Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getBx() + ax)));
+    //                 ax++;
+    //             }
+    //             break;       
+    //     }
+    // }
+    // private Word getGMemoryWord(int index){
+    //     return allMemory.get(7).getInstruction(index + 128);
+    // }
     private void printMemory(){
         for(int i = 0; i < allMemory.size(); i++){
             allMemory.get(i).printAllNicely(i);
@@ -343,7 +405,7 @@ public class RealMachine implements Runnable {
         System.out.print(TI);
         System.out.print(" |II: ");
         System.out.print(ii);
-        System.out.println("");
+        printToConsole("");
         System.out.print("SF: ");
         System.out.print(sf);
         System.out.print(" |CC: ");
@@ -354,7 +416,7 @@ public class RealMachine implements Runnable {
         System.out.print(ptr);
         System.out.print(" |MP: ");
         System.out.print(mp);
-        System.out.println("");
+        printToConsole("");
         System.out.print("AX: ");
         System.out.print(ax);
         System.out.print(" |BX: ");
@@ -376,7 +438,7 @@ public class RealMachine implements Runnable {
         }
         
         String string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc()).trim();
-        System.out.println("Original string: "+string);
+        printToConsole("Original string: "+string);
         VMList.get(VMNum).incCc();
         VMList.get(VMNum).setSf(0);
         
@@ -386,7 +448,7 @@ public class RealMachine implements Runnable {
             VMList.get(VMNum).incCc();
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
-            System.out.println("Vykdoma: ADD "+Lside+", "+Rside);
+            printToConsole("Vykdoma: ADD "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
                 if(Lside.equals("AX")){
                     if(isVMRegister(Rside)){
@@ -423,7 +485,7 @@ public class RealMachine implements Runnable {
                 }
             }
             else{
-                System.out.println("Left side is not a register, refer to docs");
+                printToConsole("Left side is not a register, refer to docs");
                 this.ei = 3;
             }
             return;
@@ -434,7 +496,7 @@ public class RealMachine implements Runnable {
             VMList.get(VMNum).incCc();
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
-            System.out.println("Vykdoma: ADDV "+Lside+", "+Rside);
+            printToConsole("Vykdoma: ADDV "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
                 if(Lside.equals("AX")){
                     //ADD AX, value
@@ -446,7 +508,7 @@ public class RealMachine implements Runnable {
                 }
             }
             else{
-                System.out.println("Left side is not a register, refer to docs");
+                printToConsole("Left side is not a register, refer to docs");
                 this.ei = 3;
             }
             return;
@@ -456,7 +518,7 @@ public class RealMachine implements Runnable {
             VMList.get(VMNum).incCc();
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
-            System.out.println("Vykdoma: SUB "+Lside+", "+Rside);
+            printToConsole("Vykdoma: SUB "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
                 if(Lside.equals("AX")){
                     if(isVMRegister(Rside)){
@@ -493,7 +555,7 @@ public class RealMachine implements Runnable {
                 }
             }
             else{
-                System.out.println("Left side is not a register, refer to docs");
+                printToConsole("Left side is not a register, refer to docs");
                 this.ei = 3;
             }
             return;
@@ -504,7 +566,7 @@ public class RealMachine implements Runnable {
             VMList.get(VMNum).incCc();
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
-            System.out.println("Vykdoma: SUBV "+Lside+", "+Rside);
+            printToConsole("Vykdoma: SUBV "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
                 if(Lside.equals("AX")){
                     //ADD AX, value
@@ -516,7 +578,7 @@ public class RealMachine implements Runnable {
                 }
             }
             else{
-                System.out.println("Left side is not a register, refer to docs");
+                printToConsole("Left side is not a register, refer to docs");
                 this.ei = 3;
             }
             return;
@@ -526,7 +588,7 @@ public class RealMachine implements Runnable {
             VMList.get(VMNum).incCc();
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
-            System.out.println("Vykdoma MOR "+Lside+", "+Rside);
+            printToConsole("Vykdoma MOR "+Lside+", "+Rside);
             if(isVMRegister(Lside)&&isVMRegister(Rside)){
                 if(Lside.equals("AX")){
                     if(Rside.equals("AX")){
@@ -557,7 +619,7 @@ public class RealMachine implements Runnable {
                 }
             }
             else{
-                System.out.println("One of the operands are not registers AX or BX");
+                printToConsole("One of the operands are not registers AX or BX");
                 this.ei = 3;
             }
             return;
@@ -567,7 +629,7 @@ public class RealMachine implements Runnable {
             VMList.get(VMNum).incCc();
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
-            System.out.println("Vykdoma MOR "+Lside+", "+Rside);
+            printToConsole("Vykdoma MOR "+Lside+", "+Rside);
             if(isVMRegister(Lside)&&isVMRegister(Rside)){
                 if(Lside.equals("AX")){
                     if(Rside.equals("AX")){
@@ -598,7 +660,7 @@ public class RealMachine implements Runnable {
                 }
             }
             else{
-                System.out.println("One of the operands are not registers AX or BX");
+                printToConsole("One of the operands are not registers AX or BX");
                 this.ei = 3;
             }
             return;
@@ -608,7 +670,7 @@ public class RealMachine implements Runnable {
             VMList.get(VMNum).incCc();
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
-            System.out.println("Vykdoma LEA "+Lside+", "+Rside);
+            printToConsole("Vykdoma LEA "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
                 if(Lside.equals("AX")){
                     if(isVMRegister(Rside)){
@@ -672,7 +734,7 @@ public class RealMachine implements Runnable {
             VMList.get(VMNum).incCc();
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
-            System.out.println("Vykdoma MOV "+Lside+", "+Rside);
+            printToConsole("Vykdoma MOV "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
                 if(Lside.equals("AX")){
                     //MOV AX, value
@@ -695,9 +757,9 @@ public class RealMachine implements Runnable {
             //GET value, returns pointer in AX 1<value<16
             string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc());
             VMList.get(VMNum).incCc();
-            System.out.println("Vykdoma GET "+string);
+            printToConsole("Vykdoma GET "+string);
             if(Integer.parseInt(string)<1 || Integer.parseInt(string)>16){
-                System.out.println("GET out of bounds, should be [1, 16] you donkey");
+                printToConsole("GET out of bounds, should be [1, 16] you donkey");
                 this.ei = 3;
             }
             else{
@@ -708,7 +770,7 @@ public class RealMachine implements Runnable {
         if (string.contains("PRR")){
             string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc()).trim();
             VMList.get(VMNum).incCc();
-            System.out.println("Vykdoma PRR "+string);
+            printToConsole("Vykdoma PRR "+string);
             if(isVMRegister(string)){
                 if(string.equals("AX")){
                     //PRR AX
@@ -720,7 +782,7 @@ public class RealMachine implements Runnable {
                 }
             }
             else
-                System.out.println("Turejai registra ivest tu asilo berete");
+                printToConsole("Turejai registra ivest tu asilo berete");
                 this.ei = 3;
             return;
         }
@@ -728,7 +790,7 @@ public class RealMachine implements Runnable {
             //Isspausdina pasirinkta atmienties bloka PRS reg , kur reg-AX/BX
             string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc()).trim();
             VMList.get(VMNum).incCc();
-            System.out.println("Vykdoma PRS "+string);
+            printToConsole("Vykdoma PRS "+string);
             if(isVMRegister(string)){
                 if(string.equals("AX")){
                     //PRS AX
@@ -740,7 +802,7 @@ public class RealMachine implements Runnable {
                 }
             }
             else{
-                System.out.println("Should be a register you mofo");
+                printToConsole("Should be a register you mofo");
                 this.ei = 3;
             }
             return;
@@ -764,7 +826,7 @@ public class RealMachine implements Runnable {
         if (string.equals("JMP")){
             string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc());
             VMList.get(VMNum).incCc();
-            System.out.println("Vykdoma JMP "+string);
+            printToConsole("Vykdoma JMP "+string);
             VMList.get(VMNum).setCc(Integer.parseInt(string));
             return;
         }
@@ -773,9 +835,9 @@ public class RealMachine implements Runnable {
             VMList.get(VMNum).incCc();
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
-            System.out.println("Vykdoma JEZ "+Lside+", "+Rside);
+            printToConsole("Vykdoma JEZ "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
-                System.out.println("Lside should not be a register");
+                printToConsole("Lside should not be a register");
                 this.ei = 3;
             }
             else{
@@ -794,7 +856,7 @@ public class RealMachine implements Runnable {
                     }
                 }
                 else{
-                    System.out.println("Rside should be a register");
+                    printToConsole("Rside should be a register");
                     this.ei = 3;
                 }
             }
@@ -805,9 +867,9 @@ public class RealMachine implements Runnable {
             VMList.get(VMNum).incCc();
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
-            System.out.println("Vykdoma JNZ "+Lside+", "+Rside);
+            printToConsole("Vykdoma JNZ "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
-                System.out.println("Lside should not be a register");
+                printToConsole("Lside should not be a register");
                 this.ei = 3;
             }
             else{
@@ -826,7 +888,7 @@ public class RealMachine implements Runnable {
                     }
                 }
                 else{
-                    System.out.println("Rside should be a register");
+                    printToConsole("Rside should be a register");
                     this.ei = 3;
                 }
             }
@@ -837,9 +899,9 @@ public class RealMachine implements Runnable {
             VMList.get(VMNum).incCc();
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
-            System.out.println("Vykdoma JGZ "+Lside+", "+Rside);
+            printToConsole("Vykdoma JGZ "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
-                System.out.println("Lside should not be a register");
+                printToConsole("Lside should not be a register");
                 this.ei = 3;
             }
             else{
@@ -858,7 +920,7 @@ public class RealMachine implements Runnable {
                     }
                 }
                 else{
-                    System.out.println("Rside should be a register");
+                    printToConsole("Rside should be a register");
                     this.ei = 3;
                 }
             }
@@ -869,9 +931,9 @@ public class RealMachine implements Runnable {
             VMList.get(VMNum).incCc();
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
-            System.out.println("Vykdoma JLZ "+Lside+", "+Rside);
+            printToConsole("Vykdoma JLZ "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
-                System.out.println("Lside should not be a register");
+                printToConsole("Lside should not be a register");
                 this.ei = 3;
             }
             else{
@@ -890,7 +952,7 @@ public class RealMachine implements Runnable {
                     }
                 }
                 else{
-                    System.out.println("Rside should be a register");
+                    printToConsole("Rside should be a register");
                     this.ei = 3;
                 }
             }
@@ -900,7 +962,7 @@ public class RealMachine implements Runnable {
                 //END();
                 return;
             }
-            System.out.println("Kaska neto ivedei");
+            printToConsole("Kaska neto ivedei");
             this.ei = 2;
     }
 
