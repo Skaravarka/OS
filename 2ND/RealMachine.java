@@ -23,25 +23,28 @@ public class RealMachine implements Runnable {
     private int chr = 0; // kanalu valdymo
     private int cc = 0; // virtualios masinos komandu
     private int dc = 0; // duomenu skaitliukas
-    private int mp = 0; // bendros atminties semaforas
+    private boolean[] mp = {false, false, false, false, 
+                            false, false, false, false, 
+                            false, false, false, false, 
+                            false, false, false, false }; // bendros atminties semaforas
     private int ii = 0; // interupt'u
     private int ei = 0; // error'u
 
     public void printHelp() {
-        printToConsole("RM:#####################");
-        printToConsole("RM:To quit press: x");
-        printToConsole("RM:Debug: a");
-        printToConsole("RM:To show help press: 0");
-        printToConsole("RM:To create VM press: 1");
-        printToConsole("RM:To run VM press: 2");
-        printToConsole("RM:To run VM till completion: 3");
-        printToConsole("RM:To terminate VMs: 4");
-        printToConsole("RM:To print memory: 5");
-        printToConsole("RM:To print registers: 6");
-        printToConsole("RM:Load to memory: 7");
-        printToConsole("RM:To print VM list: 8");
-        printToConsole("RM:To print VM memory: 9");
-        printToConsole("RM:To print VM registers: q");
+        printToConsole("#####################");
+        printToConsole("To quit press: x");
+        printToConsole("Debug: a");
+        printToConsole("To show help press: 0");
+        printToConsole("To create VM press: 1");
+        printToConsole("To run VM press: 2");
+        printToConsole("To run VM till completion: 3");
+        printToConsole("To terminate VMs: 4");
+        printToConsole("To print memory: 5");
+        printToConsole("To print registers: 6");
+        printToConsole("Load to memory: 7");
+        printToConsole("To print VM list: 8");
+        printToConsole("To print VM memory: 9");
+        printToConsole("To print VM registers: q");
     }
 
     public void printVMlist() {
@@ -55,13 +58,6 @@ public class RealMachine implements Runnable {
         for (int i = 0; i < 8; i++) {
             allMemory.add(new Memory());
         }
-    }
-
-    private boolean isWorkingRegister(String reg) {
-        if (reg.equals("AX") || reg.equals("BX") || reg.equals("CX") || reg.equals("DX")) {
-            return true;
-        }
-        return false;
     }
 
     private boolean isVMRegister(String reg) {
@@ -89,7 +85,7 @@ public class RealMachine implements Runnable {
     }
 
     private void printToConsole(String string) {
-        consoleOutputs.sendToOutput(string);
+        consoleOutputs.sendToOutput("RM:" + string);
         waitABit();
     }
 
@@ -109,25 +105,22 @@ public class RealMachine implements Runnable {
             a = rand.nextInt(allMemory.size());
         }
         ptr[a] = 1;
-        // for(int i = 0; i < ptr.length; i++){
-        //     System.out.print(ptr[i]);
-        // }
         printToConsole("");
         return a;
     }
     private void printVMMemory(){
-        printToConsole("RM: Available VMs:");
+        printToConsole(" Available VMs:");
         printVMlist();
         int command = Integer.parseInt(getConsoleCommand());
-        printToConsole("RM:Page list");
+        printToConsole("Page list");
         allMemory.get(VMList.get(command).getPtr()).printAllNicely(0);
-        printToConsole("RM:Memory");
+        printToConsole("Memory");
         allMemory.get(Integer.parseInt(Word.wordToString(allMemory.get(VMList.get(command).getPtr()).getInstruction(0)).trim())).printAllNicely(0);
 
     }
 
     private void printVmRegisters(){
-        printToConsole("RM: Available VMs:");
+        printToConsole(" Available VMs:");
         printVMlist();
         int command = Integer.parseInt(getConsoleCommand());
         printToConsole("Virtual machine nr: "+command+" registers:");
@@ -145,7 +138,7 @@ public class RealMachine implements Runnable {
     private void loadToMemory(){
         String command = consoleInputs.getLastCommand();
         int num = -1;
-        printToConsole("RM:Free memories:");
+        printToConsole("Free memories:");
         for(int i = 0; i < ptr.length; i++){
             if(ptr[i] == 0){
                 System.out.print(i + " ");
@@ -161,7 +154,7 @@ public class RealMachine implements Runnable {
             }
         }
         ptr[num] = 1;
-        printToConsole("RM:Program name:");
+        printToConsole("Program name:");
         command = getConsoleCommand();
         if (command.equals(" ") || command.equals("1")) {
             command = "PROGURAMUUWU.txt";
@@ -172,12 +165,11 @@ public class RealMachine implements Runnable {
         int instructinCount = allMemory.get(num).getInstructionCount(command);
         allMemory.get(num).loadToMemory(command);
 
-        printToConsole("RM:Available VMs:");
+        printToConsole("Available VMs:");
         printVMlist();
         printToConsole("");
         command = getConsoleCommand();
         int numVM = Integer.parseInt(command);
-        //VMList.get(numVM).setPtr(num);
         allMemory.get(VMList.get(numVM).getPtr()).set(0, Word.stringToWord("   "+Integer.toString(num)));
         VMList.get(numVM).setCc(instructinCount);
     }
@@ -230,8 +222,8 @@ public class RealMachine implements Runnable {
                 }
                 if (command.equals("1")) {
                     addVirtualMachine();
-                    printToConsole("RM:added A Virtual Machine");
-                    printToConsole("RM:Done");
+                    printToConsole("added A Virtual Machine");
+                    printToConsole("Done");
                 }
                 if (command.equals("2")) {
                     printToConsole("");
@@ -242,32 +234,32 @@ public class RealMachine implements Runnable {
                 }
                 if (command.equals("4")) {
                     VMList.clear();
-                    printToConsole("RM:Virtual Machines are terminated");
-                    printToConsole("RM:Done");
+                    printToConsole("Virtual Machines are terminated");
+                    printToConsole("Done");
                 }
                 if (command.equals("5")) {
                     printMemory();
-                    printToConsole("RM:Done");
+                    printToConsole("Done");
                 }
                 if (command.equals("6")) {
                     printRegisters();
-                    printToConsole("RM:Done");
+                    printToConsole("Done");
                 }
                 if (command.equals("7")) {
                     loadToMemory();
-                    printToConsole("RM:Done");
+                    printToConsole("Done");
                 }
                 if (command.equals("8")) {
                     printVMlist();
-                    printToConsole("RM:Done");
+                    printToConsole("Done");
                 }
                 if (command.equals("9")) {
                     printVMMemory();
-                    printToConsole("RM:Done");
+                    printToConsole("Done");
                 }
                 if (command.equals("q")){
                     printVmRegisters();
-                    printToConsole("RM:Done");
+                    printToConsole("Done");
                 }
             }
         }
@@ -298,17 +290,21 @@ public class RealMachine implements Runnable {
         // do finnished stuff
     }
     private void runVirtualMachineTillCompletion(){
-        for (int i = 0; i < VMList.size(); i++){
-            while(! isFinished(i)){
-                printToConsole("Doing a step, executing line: "+(VMList.get(i).getCc()+1));
-                doStep(i);
-                //VMList.get(i).doStep();
-
-                //interuptManagement(VMList.get(i).getSf(), ptr[i], i);
-
+        for(TI = 0; TI < DEFAULTTI + 1; TI++){
+            if(TI == DEFAULTTI){
+                ei = 4;
             }
-            printToConsole("VM nr: "+i+" has finished");
-            
+            for (int i = 0; i < VMList.size(); i++){
+                while(! isFinished(i)){
+                    printToConsole("Doing a step, executing line: "+(VMList.get(i).getCc()+1));
+                    doStep(i);
+                    //VMList.get(i).doStep();
+
+                    //interuptManagement(VMList.get(i).getSf(), ptr[i], i);
+
+                }
+                printToConsole("VM nr: "+i+" has finished");
+            }
         }
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -330,8 +326,12 @@ public class RealMachine implements Runnable {
     private void processInterupts(){
         switch(ii){
             case 1:
+                printToConsole(Integer.toString(ax));
+                ii = 0;
                 break;
             case 2:
+                printToConsole(Integer.toString(bx));
+                ii = 0;
                 break;
             case 3:
                 break;
@@ -354,45 +354,24 @@ public class RealMachine implements Runnable {
     private void processErrors(){
         switch(ei){
             case 1:
-                printToConsole("RM:Semafores are shit :D");
+                printToConsole("!EI 1! Semafores are shit :D");
+                ei = 0;
                 break;
             case 2:
-                printToConsole("RM:Bad command");
+                printToConsole("!EI 2! Bad command");
+                ei = 0;
                 break;
             case 3:
-                printToConsole("RM:Bad Operant");
+                printToConsole("!EI 3! Bad Operant");
+                ei = 0;
                 break;
+            case 4:
+                printToConsole("!EI 4! Timer reach max");
+                ei = 0;
             default:
                 break;
         }
     }
-    // private void interuptManagement(int flag, int pt, int i){
-    //     switch(flag){
-    //         case 39: // PRT AX
-    //             printToConsole(VMList.get(i).getAx());
-    //             break;
-    //         case 78: // PRT BX
-    //             printToConsole(VMList.get(i).getBx());
-    //             break;
-    //         case 20: // PRS AX
-    //             ax = 0; 
-    //             while(!Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getAx() + ax)).equals("NULL")){
-    //                 System.out.print(Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getAx() + ax)));
-    //                 ax++;
-    //             }
-    //             break;
-    //         case 21: //PRS BX
-    //             ax = 0;
-    //             while(!Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getBx() + ax)).equals("NULL")){
-    //                 System.out.print(Word.wordToString(allMemory.get(pt).getInstruction(VMList.get(i).getBx() + ax)));
-    //                 ax++;
-    //             }
-    //             break;       
-    //     }
-    // }
-    // private Word getGMemoryWord(int index){
-    //     return allMemory.get(7).getInstruction(index + 128);
-    // }
     private void printMemory(){
         for(int i = 0; i < allMemory.size(); i++){
             allMemory.get(i).printAllNicely(i);
