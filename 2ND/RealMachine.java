@@ -76,6 +76,7 @@ public class RealMachine implements Runnable {
     }
 
     private String getConsoleCommand() {
+        
         while (true) {
             String command = consoleInputs.getLastCommand();
             if (command != null && !command.equals("")) {
@@ -85,6 +86,7 @@ public class RealMachine implements Runnable {
     }
 
     private void printToConsole(String string) {
+
         consoleOutputs.sendToOutput("RM:" + string);
         waitABit();
     }

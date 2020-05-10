@@ -6,6 +6,10 @@ public class Main {
         pager
         interupt = 0
 
+        General memory
+        interupt
+        
+
         Changes:
         Added: Run till complete functionality
 
