@@ -2,20 +2,8 @@ public class Main {
 
     /*
     TODO: 
-        setReadFile
-        pager
-        interupt = 0
 
-        General memory
-        interupt
-        
-
-        Changes:
-        Added: Run till complete functionality
-
-
-        Btw MOR ir EQL komandos don't do shit
-        Jos setina sf, prilausomai true ar false, kas is to XD
+        Galetu padirbet and input faila, kai 3char vietoj 4char.
 
 
 

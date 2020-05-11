@@ -45,6 +45,7 @@ public class RealMachine implements Runnable {
         printToConsole("To print VM list: 8");
         printToConsole("To print VM memory: 9");
         printToConsole("To print VM registers: q");
+        printToConsole("To print General Memory: w");
     }
 
     public void printVMlist() {
@@ -263,6 +264,9 @@ public class RealMachine implements Runnable {
                     printVmRegisters();
                     printToConsole("Done");
                 }
+                if (command.equals("w")){
+                    printGeneralMemory();
+                }
             }
         }
         try {
@@ -309,14 +313,12 @@ public class RealMachine implements Runnable {
             }
         }
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void doStep(int VMNum){
         printToConsole("Doing Vm nr:"+VMNum+" step");
         executeCommand(VMNum);
         processInterupts(VMNum);
         processErrors();
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public boolean isFinished(int VMNum){
         if(paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc()).equals("HALT")){
             return true;
@@ -325,15 +327,53 @@ public class RealMachine implements Runnable {
             return false;
         }
     }
-    private void handleWGD(){ // write to general memory
-        int tempIndex = 0;
-        String tempWord = "";
-        allMemory.get(allMemory.size() - 1).set(tempIndex, Word.stringToWord(tempWord));
+    private void handleWGD(int i, int VMnum){ // write to general memory
+        if(i == 0){
+            //WGD AX, value
+            int index = ax;
+            String str = String.valueOf(VMList.get(VMnum).getAx());
+            //Padding string so Word.stringTOWord wouldn't complain
+            String padded = "    ".substring(str.length())+str;
+            Word word = Word.stringToWord(padded);
+            allMemory.get(allMemory.size()-1).set(index, word);
+        }
+        else{
+            //WGD BX, value
+            int index = ax;
+            String str = String.valueOf(VMList.get(VMnum).getBx());
+            //Padding string so Word.stringTOWord wouldn't complain
+            String padded = "    ".substring(str.length())+str;
+            Word word = Word.stringToWord(padded);
+            allMemory.get(allMemory.size()-1).set(index, word);
+        }
     }
-    private void handleRGD(){ // read from general memory
+    private void handleRGD(int i, int VMnum){ // read from general memory
+        if(i==0){
+            //RGD AX, value
+            int index = ax;
+            Word got = allMemory.get(allMemory.size()-1).getInstruction(index);
+            String alabama = Word.wordToString(got);
+            int number = Integer.parseInt(alabama.trim());
+            VMList.get(VMnum).setAx(number);
+        }
+        else{
+            //RGD BX, value
+            int index = ax;
+            Word got = allMemory.get(allMemory.size()-1).getInstruction(index);
+            String alabama = Word.wordToString(got);
+            int number = Integer.parseInt(alabama.trim());
+            VMList.get(VMnum).setBx(number);
+        }
         int tempIndex = 0;
         Word temp = allMemory.get(allMemory.size() - 1).getInstruction(tempIndex);
         String tempWord = Word.wordToString(temp);
+    }
+    private void printGeneralMemory(){
+        printToConsole("General Memory:");
+        for (int i = 0; i < 256; i++) {
+            System.out.print(Word.wordToString(allMemory.get(allMemory.size() - 1).getInstruction(i))+" ");            
+        }
+        printToConsole("");
     }
     private void handleLGD(int VMnum){// lock general memory 
         if(!mp[0]){
@@ -359,20 +399,26 @@ public class RealMachine implements Runnable {
                 ii = 0;
                 break;
             case 3:
-                handleWGD();
+                //handleWGD(); PRS AX
                 break;
             case 4:
-                handleRGD();
+                //handleRGD(); PRS BX
                 break;
             case 5:
-                handleLGD(VMnum);
+                // WGD AX, value
+                handleWGD(0, VMnum);
                 break;
             case 6:
-                handleUGD(VMnum);
+                // WGD BX, value
+                handleWGD(1, VMnum);
                 break;
             case 7:
+                // RGD AX, value
+                handleRGD(0, VMnum);
                 break;
             case 8:
+                // RGD BX, value
+                handleRGD(1, VMnum);
                 break;
             case 9:
                 break;
@@ -802,31 +848,65 @@ public class RealMachine implements Runnable {
             if(isVMRegister(string)){
                 if(string.equals("AX")){
                     //PRS AX
-                    this.ii = 3;
+                    ii = 3;
                 }
                 else{
                     //PRS BX
-                    this.ii = 4;
+                    ii = 4;
                 }
             }
             else{
                 printToConsole("Should be a register you mofo");
-                this.ei = 3;
+                ei = 3;
             }
             return;
         }
         if (string.contains("WGD")){
-            //Nusikelia po OS
-            //Kodel nepridejai interrupt'u xddd?
-
-
-            ii = 3;
+            string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc());
+            VMList.get(VMNum).incCc();
+            String Lside = string.substring(0, 2).trim();
+            String Rside = string.substring(2, 4).trim();
+            printToConsole("Vykdoma WGD "+Lside+", "+Rside);
+            if(isVMRegister(Lside)){
+                if(Lside.equals("AX")){
+                    //WGD AX, value
+                    ax = Integer.parseInt(Rside, 16);
+                    ii = 5; 
+                }
+                else{
+                    //WGD BX, value
+                    ax = Integer.parseInt(Rside, 16);
+                    ii = 6;
+                }
+            }
+            else{
+                printToConsole("Should be a register you mofo");
+                ei = 3;
+            }
             return;
         }
         if (string.contains("RGD")){
-            //Nusikelia po OS
-            //Kodel nepridejai interrupt'u xddd?
-            ii = 4;
+            string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc());
+            VMList.get(VMNum).incCc();
+            String Lside = string.substring(0, 2).trim();
+            String Rside = string.substring(2, 4).trim();
+            printToConsole("Vykdoma WGD "+Lside+", "+Rside);
+            if(isVMRegister(Lside)){
+                if(Lside.equals("AX")){
+                    //WGD AX, value
+                    ax = Integer.parseInt(Rside, 16);
+                    ii = 7; 
+                }
+                else{
+                    //WGD BX, value
+                    ax = Integer.parseInt(Rside, 16);
+                    ii = 8;
+                }
+            }
+            else{
+                printToConsole("Should be a register you mofo");
+                ei = 3;
+            }
             return;
         }
         if (string.contains("LGD")){
@@ -920,7 +1000,7 @@ public class RealMachine implements Runnable {
             printToConsole("Vykdoma JGZ "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
                 printToConsole("Lside should not be a register");
-                this.ei = 3;
+                ei = 3;
             }
             else{
                 if(isVMRegister(Rside)){
@@ -939,7 +1019,7 @@ public class RealMachine implements Runnable {
                 }
                 else{
                     printToConsole("Rside should be a register");
-                    this.ei = 3;
+                    ei = 3;
                 }
             }
             return;
@@ -952,7 +1032,7 @@ public class RealMachine implements Runnable {
             printToConsole("Vykdoma JLZ "+Lside+", "+Rside);
             if(isVMRegister(Lside)){
                 printToConsole("Lside should not be a register");
-                this.ei = 3;
+                ei = 3;
             }
             else{
                 if(isVMRegister(Rside)){
@@ -971,7 +1051,7 @@ public class RealMachine implements Runnable {
                 }
                 else{
                     printToConsole("Rside should be a register");
-                    this.ei = 3;
+                    ei = 3;
                 }
             }
             return;
@@ -981,7 +1061,7 @@ public class RealMachine implements Runnable {
                 return;
             }
             printToConsole("Kaska neto ivedei");
-            this.ei = 2;
+            ei = 2;
     }
 
 }
