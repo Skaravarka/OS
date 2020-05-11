@@ -14,7 +14,7 @@ public class RealMachine implements Runnable {
 
     private boolean mode = false;
     private int TI = 0;
-    private int[] ptr = { 0, 0, 0, 0, 0, 0, 0, 0 }; // puslapio trasliacija
+    private int[] ptr = { 0, 0, 0, 0, 0, 0, 0 }; // puslapio trasliacija
     private int sf = 0;
     private int ax = 0; // darbinis
     private int bx = 0; // darbinis
@@ -102,9 +102,9 @@ public class RealMachine implements Runnable {
             return -1;
         }
         Random rand = new Random();
-        int a = rand.nextInt(allMemory.size());
+        int a = rand.nextInt(allMemory.size() - 1);
         while(ptr[a] == 1){
-            a = rand.nextInt(allMemory.size());
+            a = rand.nextInt(allMemory.size() - 1);
         }
         ptr[a] = 1;
         printToConsole("");
@@ -313,8 +313,8 @@ public class RealMachine implements Runnable {
     public void doStep(int VMNum){
         printToConsole("Doing Vm nr:"+VMNum+" step");
         executeCommand(VMNum);
+        processInterupts(VMNum);
         processErrors();
-        processInterupts();
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public boolean isFinished(int VMNum){
@@ -325,7 +325,30 @@ public class RealMachine implements Runnable {
             return false;
         }
     }
-    private void processInterupts(){
+    private void handleWGD(){ // write to general memory
+        int tempIndex = 0;
+        String tempWord = "";
+        allMemory.get(allMemory.size() - 1).set(tempIndex, Word.stringToWord(tempWord));
+    }
+    private void handleRGD(){ // read from general memory
+        int tempIndex = 0;
+        Word temp = allMemory.get(allMemory.size() - 1).getInstruction(tempIndex);
+        String tempWord = Word.wordToString(temp);
+    }
+    private void handleLGD(int VMnum){// lock general memory 
+        if(!mp[0]){
+            mp[0] = true;
+            VMList.get(VMnum).setMp(1);
+        }
+        else ei = 1;
+        
+    }
+    private void handleUGD(int VMnum){ // unlock general memory
+        mp[0] = false;
+        VMList.get(VMnum).setMp(0);
+    }
+
+    private void processInterupts(int VMnum){
         switch(ii){
             case 1:
                 printToConsole(Integer.toString(ax));
@@ -336,12 +359,16 @@ public class RealMachine implements Runnable {
                 ii = 0;
                 break;
             case 3:
+                handleWGD();
                 break;
             case 4:
+                handleRGD();
                 break;
             case 5:
+                handleLGD(VMnum);
                 break;
             case 6:
+                handleUGD(VMnum);
                 break;
             case 7:
                 break;
@@ -790,18 +817,28 @@ public class RealMachine implements Runnable {
         }
         if (string.contains("WGD")){
             //Nusikelia po OS
+            //Kodel nepridejai interrupt'u xddd?
+
+
+            ii = 3;
             return;
         }
         if (string.contains("RGD")){
             //Nusikelia po OS
+            //Kodel nepridejai interrupt'u xddd?
+            ii = 4;
             return;
         }
         if (string.contains("LGD")){
             //Nusikelia po OS
+            //Kodel nepridejai interrupt'u xddd?
+            ii = 5;
             return;
         }
         if (string.contains("UGD")){
             //Nusikelia po OS
+            //Kodel nepridejai interrupt'u xddd?
+            ii = 6;
             return;
         }
         if (string.equals("JMP")){

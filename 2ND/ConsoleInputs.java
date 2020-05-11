@@ -37,7 +37,6 @@ public class ConsoleInputs implements Runnable {
             return null;
     }
 
-
     public void killThread(){
         isAlive = false;
     }
