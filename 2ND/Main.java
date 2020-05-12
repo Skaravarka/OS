@@ -5,6 +5,7 @@ public class Main {
 
 
         IMPORTANT: Pratestinti komandas, ir surasyt kokiais atvejais neveikia, kad galeciau pataisyt
+        ps. General memory perdariau su lastelem, o ne vienu bloku
 
         Galetu padirbet and input faila, kai nera 4char komanda.
 
