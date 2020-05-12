@@ -368,24 +368,58 @@ public class RealMachine implements Runnable {
         Word temp = allMemory.get(allMemory.size() - 1).getInstruction(tempIndex);
         String tempWord = Word.wordToString(temp);
     }
+    private boolean checkCell(int cell){
+        int a = 0;
+        while(cell>16){
+            cell = cell - 16;
+            a++;
+        }
+        System.out.println("Checking cell:"+a);
+        if(mp[a] == true){
+            return true;
+        }
+        else{
+            return false;
+        }
+
+    }
     private void printGeneralMemory(){
         printToConsole("General Memory:");
+        int q = 0;
+        int w = 0;
         for (int i = 0; i < 256; i++) {
-            System.out.print(Word.wordToString(allMemory.get(allMemory.size() - 1).getInstruction(i))+" ");            
+            q++;
+            System.out.print(Word.wordToString(allMemory.get(allMemory.size() - 1).getInstruction(i))+" ");
+            if(q == 16){
+                if(mp[w]==true){
+                    System.out.println(" Locked");
+                }
+                else{
+                    System.out.println(" Unlocked");
+                }
+                q = 0;
+                w++;
+            }
         }
-        printToConsole("");
+        System.out.println();
     }
-    private void handleLGD(int VMnum){// lock general memory 
-        if(!mp[0]){
-            mp[0] = true;
-            VMList.get(VMnum).setMp(1);
+    private void handleLGD(int VMnum){// lock general memory
+        if(ax>15){
+            return;
+        } 
+        if(!mp[ax]){
+            mp[ax] = true;
+            VMList.get(VMnum).setMp(ax);
         }
         else ei = 1;
         
     }
     private void handleUGD(int VMnum){ // unlock general memory
-        mp[0] = false;
-        VMList.get(VMnum).setMp(0);
+        if(ax>15){
+            return;
+        }
+        mp[ax] = false;
+        VMList.get(VMnum).setMp(ax);
     }
 
     private void processInterupts(int VMnum){
@@ -421,7 +455,12 @@ public class RealMachine implements Runnable {
                 handleRGD(1, VMnum);
                 break;
             case 9:
+                // LGD value
+                handleLGD(VMnum);
                 break;
+            case 10:
+                // UGD value
+                handleUGD(VMnum);
             default:
                 break;
         }
@@ -429,7 +468,7 @@ public class RealMachine implements Runnable {
     private void processErrors(){
         switch(ei){
             case 1:
-                printToConsole("!EI 1! Semafores are shit :D");
+                printToConsole("!EI 1! Cell locked");
                 ei = 0;
                 break;
             case 2:
@@ -492,7 +531,6 @@ public class RealMachine implements Runnable {
         }
         
         String string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc()).trim();
-        printToConsole("Original string: "+string);
         VMList.get(VMNum).incCc();
         VMList.get(VMNum).setSf(0);
         
@@ -867,6 +905,11 @@ public class RealMachine implements Runnable {
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
             printToConsole("Vykdoma WGD "+Lside+", "+Rside);
+            if(checkCell(Integer.parseInt(Rside, 16))){
+                VMList.get(VMNum).setCc(VMList.get(VMNum).getCc()-2);
+                ei = 1;
+                return;
+            }
             if(isVMRegister(Lside)){
                 if(Lside.equals("AX")){
                     //WGD AX, value
@@ -891,6 +934,11 @@ public class RealMachine implements Runnable {
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
             printToConsole("Vykdoma WGD "+Lside+", "+Rside);
+            if(checkCell(Integer.parseInt(Rside, 16))){
+                VMList.get(VMNum).setCc(VMList.get(VMNum).getCc()-2);
+                ei = 1;
+                return;
+            }
             if(isVMRegister(Lside)){
                 if(Lside.equals("AX")){
                     //WGD AX, value
@@ -910,15 +958,21 @@ public class RealMachine implements Runnable {
             return;
         }
         if (string.contains("LGD")){
-            //Nusikelia po OS
-            //Kodel nepridejai interrupt'u xddd?
-            ii = 5;
+            string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc()).trim();
+            VMList.get(VMNum).incCc();
+            printToConsole("Vykdoma LGD "+string);
+            //LGD value
+            ax = Integer.parseInt(string);
+            ii = 9;
             return;
         }
         if (string.contains("UGD")){
-            //Nusikelia po OS
-            //Kodel nepridejai interrupt'u xddd?
-            ii = 6;
+            string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc()).trim();
+            VMList.get(VMNum).incCc();
+            printToConsole("Vykdoma UGD "+string);
+            //UGD value
+            ax = Integer.parseInt(string);
+            ii = 10;
             return;
         }
         if (string.equals("JMP")){

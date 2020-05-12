@@ -3,7 +3,10 @@ public class Main {
     /*
     TODO: 
 
-        Galetu padirbet and input faila, kai 3char vietoj 4char.
+
+        IMPORTANT: Pratestinti komandas, ir surasyt kokiais atvejais neveikia, kad galeciau pataisyt
+
+        Galetu padirbet and input faila, kai nera 4char komanda.
 
 
 

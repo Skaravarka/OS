@@ -6,6 +6,8 @@ NULL
 CODE
 ADDV
 AX12
+LGD 
+0   
 WGD 
 AX02
 RGD 
