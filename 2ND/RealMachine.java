@@ -327,6 +327,18 @@ public class RealMachine implements Runnable {
             return false;
         }
     }
+    private void handlePRS(int VMNum){
+        int left = VMList.get(VMNum).getAx();
+        int right = VMList.get(VMNum).getBx();
+        if(left<right){
+            ei = 2;
+            return;
+        }
+        while(left<right){
+            printToConsole(paging(VMList.get(VMNum).getPtr(), left));
+            left++;
+        }
+    }
     private void handleWGD(int i, int VMnum){ // write to general memory
         if(i == 0){
             //WGD AX, value
@@ -368,7 +380,7 @@ public class RealMachine implements Runnable {
         Word temp = allMemory.get(allMemory.size() - 1).getInstruction(tempIndex);
         String tempWord = Word.wordToString(temp);
     }
-    private boolean checkCell(int cell){
+    private boolean checkCell(int cell, int VMNum){
         int a = 0;
         while(cell>16){
             cell = cell - 16;
@@ -376,6 +388,10 @@ public class RealMachine implements Runnable {
         }
         System.out.println("Checking cell:"+a);
         if(mp[a] == true){
+            if(VMList.get(VMNum).getMp() == a){
+                //Aka. vmas turi pats ussirakines sita
+                return false;
+            }
             return true;
         }
         else{
@@ -425,18 +441,19 @@ public class RealMachine implements Runnable {
     private void processInterupts(int VMnum){
         switch(ii){
             case 1:
-                printToConsole(Integer.toString(ax));
+                printToConsole(Integer.toString(VMList.get(VMnum).getAx()));
                 ii = 0;
                 break;
             case 2:
-                printToConsole(Integer.toString(bx));
+                printToConsole(Integer.toString(VMList.get(VMnum).getBx()));
                 ii = 0;
                 break;
             case 3:
-                //handleWGD(); PRS AX
+                // PRS AX, BX
+                handlePRS(VMnum);
                 break;
             case 4:
-                //handleRGD(); PRS BX
+                //Empty
                 break;
             case 5:
                 // WGD AX, value
@@ -883,20 +900,8 @@ public class RealMachine implements Runnable {
             string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc()).trim();
             VMList.get(VMNum).incCc();
             printToConsole("Vykdoma PRS "+string);
-            if(isVMRegister(string)){
-                if(string.equals("AX")){
-                    //PRS AX
-                    ii = 3;
-                }
-                else{
-                    //PRS BX
-                    ii = 4;
-                }
-            }
-            else{
-                printToConsole("Should be a register you mofo");
-                ei = 3;
-            }
+            //PRS AX, BX
+            ii = 3;
             return;
         }
         if (string.contains("WGD")){
@@ -905,7 +910,7 @@ public class RealMachine implements Runnable {
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
             printToConsole("Vykdoma WGD "+Lside+", "+Rside);
-            if(checkCell(Integer.parseInt(Rside, 16))){
+            if(checkCell(Integer.parseInt(Rside, 16), VMNum)){
                 VMList.get(VMNum).setCc(VMList.get(VMNum).getCc()-2);
                 ei = 1;
                 return;
@@ -934,7 +939,7 @@ public class RealMachine implements Runnable {
             String Lside = string.substring(0, 2).trim();
             String Rside = string.substring(2, 4).trim();
             printToConsole("Vykdoma WGD "+Lside+", "+Rside);
-            if(checkCell(Integer.parseInt(Rside, 16))){
+            if(checkCell(Integer.parseInt(Rside, 16), VMNum)){
                 VMList.get(VMNum).setCc(VMList.get(VMNum).getCc()-2);
                 ei = 1;
                 return;
