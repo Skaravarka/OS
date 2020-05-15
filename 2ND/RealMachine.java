@@ -328,13 +328,14 @@ public class RealMachine implements Runnable {
         }
     }
     private void handlePRS(int VMNum){
+
         int left = VMList.get(VMNum).getAx();
         int right = VMList.get(VMNum).getBx();
-        if(left<right){
+        if(left > right){
             ei = 2;
             return;
         }
-        while(left<right){
+        while(left < right){
             printToConsole(paging(VMList.get(VMNum).getPtr(), left));
             left++;
         }
