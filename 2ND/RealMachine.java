@@ -386,8 +386,6 @@ public class RealMachine implements Runnable {
             int number = Integer.parseInt(alabama.trim());
             VMList.get(VMnum).setBx(number);
         }
-        int tempIndex = 0;
-        Word temp = allMemory.get(allMemory.size() - 1).getInstruction(tempIndex);
     }
     private boolean checkCell(int cell, int VMNum){
         int a = 0;
