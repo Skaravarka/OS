@@ -438,13 +438,6 @@ public class RealMachine implements Runnable {
         VMList.get(VMnum).setMp(ax);
     }
 
-    private void handleRRS(int VMNum){   
-        for(int i = ax; i < bx; i++){
-            String string = paging(VMList.get(VMNum).getPtr(), i).trim();
-            printToConsole(string);
-        }
-    }
-
     private void processInterupts(int VMnum){
         switch(ii){
             case 1:

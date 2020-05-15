@@ -7,6 +7,6 @@ MOV
 AX01
 MOV 
 BX04
-PRR 
+PRS   
 AX  
 HALT
