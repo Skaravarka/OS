@@ -277,7 +277,6 @@ public class RealMachine implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        printToConsole("maiu");
     }
     private void runVirtualMachines(){
         for (int i = 0; i < VMList.size(); i++){
@@ -297,19 +296,26 @@ public class RealMachine implements Runnable {
     }
     private void runVirtualMachineTillCompletion(){
         for(TI = 0; TI < DEFAULTTI + 1; TI++){
+            
             if(TI == DEFAULTTI){
                 ei = 4;
+                processErrors();
+                return;
             }
+            int count = 0;
             for (int i = 0; i < VMList.size(); i++){
-                while(! isFinished(i)){
+                if(! isFinished(i)){
                     printToConsole("Doing a step, executing line: "+(VMList.get(i).getCc()+1));
                     doStep(i);
                     //VMList.get(i).doStep();
 
                     //interuptManagement(VMList.get(i).getSf(), ptr[i], i);
-
-                }
-                printToConsole("VM nr: "+i+" has finished");
+                } 
+                else count += 1;
+            }
+            if(count == VMList.size()){
+                printToConsole("Done");
+                return;
             }
         }
     }
@@ -335,10 +341,13 @@ public class RealMachine implements Runnable {
             ei = 2;
             return;
         }
+        String temp = "";
         while(left < right){
-            printToConsole(paging(VMList.get(VMNum).getPtr(), left));
+            temp = temp + paging(VMList.get(VMNum).getPtr(), left);
+            //printToConsole(paging(VMList.get(VMNum).getPtr(), left));
             left++;
         }
+        printToConsole(temp);
     }
     private void handleWGD(int i, int VMnum){ // write to general memory
         if(i == 0){
@@ -892,7 +901,7 @@ public class RealMachine implements Runnable {
                 }
             }
             else{
-                printToConsole("Turejai registra ivest tu asilo berete");
+                //printToConsole("Turejai registra ivest tu asilo berete");
                 this.ei = 3;
             }
             return;
@@ -928,7 +937,7 @@ public class RealMachine implements Runnable {
                 }
             }
             else{
-                printToConsole("Should be a register you mofo");
+                //printToConsole("Should be a register you mofo");
                 ei = 3;
             }
             return;
@@ -957,7 +966,7 @@ public class RealMachine implements Runnable {
                 }
             }
             else{
-                printToConsole("Should be a register you mofo");
+                //printToConsole("Should be a register you mofo");
                 ei = 3;
             }
             return;
