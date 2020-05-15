@@ -7,7 +7,6 @@ public class VirtualMachine {
     private int sf;
     private int mp;
     private int ptr;
-    private Memory memory = new Memory();
     
     
     public VirtualMachine(Memory memory, int ax, int bx, int cc, int sf, int mp) {
@@ -16,7 +15,6 @@ public class VirtualMachine {
         this.cc = cc;
         this.sf = sf;
         this.mp = mp;
-        this.memory = memory;
     }
     public VirtualMachine() {
         this.ax = 0;
@@ -24,7 +22,6 @@ public class VirtualMachine {
         this.cc = 0;
         this.sf = 0;
         this.mp = 0;
-        this.memory = null;
     }
 
     public int getAx(){
@@ -74,9 +71,6 @@ public class VirtualMachine {
     }
     public void setPtr(int ptr){
         this.ptr = ptr;
-    }
-    public void setMemory(Memory memory){
-        this.memory = memory;
     }
 
 }
