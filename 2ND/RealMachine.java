@@ -188,7 +188,7 @@ public class RealMachine implements Runnable {
     private void debug(){
         printToConsole("miau");
         printToConsole("test");
-        printToConsole("kek");
+        printToConsole("kek");  
     }
 
     public void run() {
@@ -422,6 +422,13 @@ public class RealMachine implements Runnable {
         VMList.get(VMnum).setMp(ax);
     }
 
+    private void handleRRS(int VMNum){   
+        for(int i = ax; i < bx; i++){
+            String string = paging(VMList.get(VMNum).getPtr(), i).trim();
+            printToConsole(string);
+        }
+    }
+
     private void processInterupts(int VMnum){
         switch(ii){
             case 1:
@@ -433,6 +440,7 @@ public class RealMachine implements Runnable {
                 ii = 0;
                 break;
             case 3:
+                handleRRS(VMnum);
                 //handleWGD(); PRS AX
                 break;
             case 4:
@@ -884,14 +892,7 @@ public class RealMachine implements Runnable {
             VMList.get(VMNum).incCc();
             printToConsole("Vykdoma PRS "+string);
             if(isVMRegister(string)){
-                if(string.equals("AX")){
-                    //PRS AX
-                    ii = 3;
-                }
-                else{
-                    //PRS BX
-                    ii = 4;
-                }
+                ii = 3;
             }
             else{
                 printToConsole("Should be a register you mofo");
