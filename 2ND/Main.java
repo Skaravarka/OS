@@ -14,7 +14,7 @@ public class Main {
     */
     public static void main(String[] args) throws InterruptedException {
 
-        System.out.println("Helllooo, Welcum to our computah");
+        System.out.println("Helllooo, Welcome to our computah");
 
         Thread RM1 = new Thread(new RealMachine());
 
