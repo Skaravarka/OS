@@ -388,7 +388,6 @@ public class RealMachine implements Runnable {
         }
         int tempIndex = 0;
         Word temp = allMemory.get(allMemory.size() - 1).getInstruction(tempIndex);
-        String tempWord = Word.wordToString(temp);
     }
     private boolean checkCell(int cell, int VMNum){
         int a = 0;
