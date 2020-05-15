@@ -905,8 +905,6 @@ public class RealMachine implements Runnable {
         }
         if (string.contains("PRS")){
             //Isspausdina pasirinkta atmienties bloka PRS reg , kur reg-AX/BX
-            string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc()).trim();
-            VMList.get(VMNum).incCc();
             printToConsole("Vykdoma PRS "+string);
             //PRS AX, BX
             ii = 3;
