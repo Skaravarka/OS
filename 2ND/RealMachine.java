@@ -11,10 +11,10 @@ public class RealMachine implements Runnable {
     private Thread consoleOutputThread;
     private ConsoleOutput consoleOutputs;
     private int DEFAULTTI = 50;
-
     private boolean mode = false;
     private int TI = 0;
-    private int[] ptr = { 0, 0, 0, 0, 0, 0, 0 }; // puslapio trasliacija turetu buti 50, skaito reiksme, nuskaito kaska ka vygdo ir sumapina
+    private int[] ptr = { 0, 0, 0, 0, 0, 0, 0 }; 
+    // puslapio trasliacija turetu buti 50, skaito reiksme, nuskaito kaska ka vygdo ir sumapina
     //VM neegzistuoja, 16x16
     // Registras, kuris rodo i GD, ir MP-geras
     // TI REGISTRA PADARYT!!!

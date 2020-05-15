@@ -10,6 +10,14 @@ public class Main {
         Galetu padirbet and input faila, kai nera 4char komanda.
 
 
+        [ ] supervizorine, paging
+        [ ] real machine registrai
+        [ ] atmintis 16x16
+        [ ] TI registras
+        [ ] PTR redo
+        [ ] general memory pointer
+        [ ] PI, SI???????????
+
 
     */
     public static void main(String[] args) throws InterruptedException {
