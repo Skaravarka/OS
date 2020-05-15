@@ -14,15 +14,20 @@ public class RealMachine implements Runnable {
 
     private boolean mode = false;
     private int TI = 0;
-    private int[] ptr = { 0, 0, 0, 0, 0, 0, 0 }; // puslapio trasliacija
+    private int[] ptr = { 0, 0, 0, 0, 0, 0, 0 }; // puslapio trasliacija turetu buti 50, skaito reiksme, nuskaito kaska ka vygdo ir sumapina
+    //VM neegzistuoja, 16x16
+    // Registras, kuris rodo i GD, ir MP-geras
+    // TI REGISTRA PADARYT!!!
+    // PI, SI, kai instrukcija vykdoma, baige sakini jis
+    // 
     private int sf = 0;
-    private int ax = 0; // darbinis
-    private int bx = 0; // darbinis
-    private int cx = 0; // darbinis
-    private int dx = 0; // darbinis
+    private int ax = 0;  // darbinis
+    private int bx = 0;  // darbinis
+    private int cx = 0;  // darbinis
+    private int dx = 0;  // darbinis
     private int chr = 0; // kanalu valdymo
-    private int cc = 0; // virtualios masinos komandu
-    private int dc = 0; // duomenu skaitliukas
+    private int cc = 0;  // virtualios masinos komandu
+    private int dc = 0;  // duomenu skaitliukas
     private boolean[] mp = {false, false, false, false, 
                             false, false, false, false, 
                             false, false, false, false, 
