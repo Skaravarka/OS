@@ -879,7 +879,7 @@ public class RealMachine implements Runnable {
         if (string.contains("PRR")){
             string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc()).trim();
             VMList.get(VMNum).incCc();
-            printToConsole("Vykdoma PRR "+string);
+            printToConsole("Vykdoma PRR "+"'"+string+"'");
             if(isVMRegister(string)){
                 if(string.equals("AX")){
                     //PRR AX
@@ -890,15 +890,14 @@ public class RealMachine implements Runnable {
                     this.ii = 2;
                 }
             }
-            else
+            else{
                 printToConsole("Turejai registra ivest tu asilo berete");
                 this.ei = 3;
+            }
             return;
         }
         if (string.contains("PRS")){
             //Isspausdina pasirinkta atmienties bloka PRS reg , kur reg-AX/BX
-            string = paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc()).trim();
-            VMList.get(VMNum).incCc();
             printToConsole("Vykdoma PRS "+string);
             //PRS AX, BX
             ii = 3;
