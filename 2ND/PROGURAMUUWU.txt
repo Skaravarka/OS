@@ -21,5 +21,4 @@ AX
 MOV 
 AX0 
 PRS 
-AX  
 HALT
