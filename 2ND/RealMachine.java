@@ -88,6 +88,7 @@ public class RealMachine implements Runnable {
 
     private void printToConsole(String string) {
 
+    
         consoleOutputs.sendToOutput("RM:" + string);
         waitABit();
     }
