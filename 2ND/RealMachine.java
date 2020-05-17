@@ -10,6 +10,7 @@ import java.util.Random;
     // 0
 
 public class RealMachine implements Runnable {
+    private int activeMachine = 0;
     ArrayList<Supervisor> supervisorMemory = new ArrayList<Supervisor>();
     ArrayList<Memory> allMemory = new ArrayList<Memory>();
     ArrayList<VirtualMachine> VMList = new ArrayList<VirtualMachine>();
@@ -17,12 +18,11 @@ public class RealMachine implements Runnable {
     private ConsoleInputs consoleInputs;
     private Thread consoleOutputThread;
     private ConsoleOutput consoleOutputs;
-    private int DEFAULTTI = 100;
+    private int DEFAULTTI = 10;
     private int TIMERCOMMAND = 2;
     private int TIMERINTERUPT = 3;
     private boolean mode = false;
-    private int TI = 0;
-    //private int[] ptr = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
+    private int TI = DEFAULTTI;
     private int ptr = 0; 
     private int sf = 0;
     private int ax = 0;  // darbinis
@@ -173,7 +173,38 @@ public class RealMachine implements Runnable {
         VirtualMachine virtualMachine = new VirtualMachine();
         virtualMachine.setPtr(page);
 
+        supervisorMemory.add(new Supervisor());
         VMList.add(virtualMachine);
+    }
+    private void saveAndLoadSupervisorMemory(int a, int b){
+        supervisorMemory.get(a).setAx(ax);
+        supervisorMemory.get(a).setBx(bx);
+        supervisorMemory.get(a).setCx(cx);
+        supervisorMemory.get(a).setDx(dx);
+        supervisorMemory.get(a).setCc(cc);
+        supervisorMemory.get(a).setChr(chr);
+        supervisorMemory.get(a).setDc(dc);
+        supervisorMemory.get(a).setEi(ei);
+        supervisorMemory.get(a).setIi(ii);
+        supervisorMemory.get(a).setMode(mode);
+        supervisorMemory.get(a).setPtr(ptr);
+        supervisorMemory.get(a).setSf(sf);
+        supervisorMemory.get(a).setTI(TI);
+        
+        ax = supervisorMemory.get(b).getAx();
+        bx = supervisorMemory.get(b).getBx();
+        cc = supervisorMemory.get(b).getCc();
+        chr = supervisorMemory.get(b).getChr();
+        cx = supervisorMemory.get(b).getCx();
+        dc = supervisorMemory.get(b).getDc();
+        dx = supervisorMemory.get(b).getDx();
+        ei = supervisorMemory.get(b).getEi();
+        ii = supervisorMemory.get(b).getIi();
+        ptr = supervisorMemory.get(b).getPtr();
+        sf = supervisorMemory.get(b).getSf();
+        TI = supervisorMemory.get(b).getTI();
+        mode = supervisorMemory.get(b).isMode();
+
     }
     private void loadToMemory(){
         String command = consoleInputs.getLastCommand();
@@ -219,6 +250,7 @@ public class RealMachine implements Runnable {
     }
     public void run() {
         createMemory();
+        supervisorMemory.add(new Supervisor());
         try {
             consoleInputs = new ConsoleInputs();
             consoleOutputs = new ConsoleOutput(); 
@@ -305,12 +337,13 @@ public class RealMachine implements Runnable {
         }
     }
     private void runVirtualMachines(){
-        for(int i = 0; i < VMList.size(); i++){
-            if(!isFinished(i)){
-                printToConsole("Doing a step, executing line: "+(VMList.get(i).getCc()+1));
-                doStep(i); 
-            }
-            else break;
+        if(!isFinished(activeMachine)){
+            printToConsole("Doing a step, executing line: "+(VMList.get(activeMachine).getCc()+1));
+            doStep(activeMachine); 
+        }
+        else {
+            ii = 10;
+            processErrors();
         }
     }
     private void runVirtualMachineTillCompletion(){
@@ -351,6 +384,8 @@ public class RealMachine implements Runnable {
     public void doStep(int VMNum){
         printToConsole("Doing Vm nr:"+VMNum+" step");
         executeCommand(VMNum);
+        if(TI < 0)
+            ii = 11;
         processInterupts(VMNum);
         processErrors();
         processRegisters(VMNum);
@@ -361,6 +396,18 @@ public class RealMachine implements Runnable {
         }
         else{
             return false;
+        }
+    }
+    private void handleTimer(){
+        if(VMList.size() - 1 > activeMachine){
+            saveAndLoadSupervisorMemory(activeMachine + 1, activeMachine + 2);
+            activeMachine++;
+            TI = DEFAULTTI;
+        }
+        else {
+            saveAndLoadSupervisorMemory(activeMachine + 1, 1);
+            activeMachine = 0;
+            TI = DEFAULTTI;
         }
     }
     private void handlePRS(int VMNum){
@@ -518,6 +565,9 @@ public class RealMachine implements Runnable {
             case 10:
                 // UGD value
                 handleUGD(VMnum);
+            case 11:
+                handleTimer();
+                break;    
             default:
                 break;
         }

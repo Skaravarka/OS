@@ -10,13 +10,14 @@ public class Main {
         Galetu padirbet and input faila, kai nera 4char komanda.
 
 
-        [ ] supervizorine
+        [x] supervizorine -- a bit broken
         [x] paging
-        [ ] real machine registrai
+        [x] real machine registrai
         [x] atmintis 16x16
         [x] make instructions to work with 16x16 memory
         [x] TI registras
-        [ ] Make run and run till completion work properly
+        [x] Make run
+        [ ] run till completion
         [x] PTR redo
         [ ] do something with MODE
         [ ] general memory pointer
