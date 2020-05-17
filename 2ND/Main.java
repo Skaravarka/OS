@@ -15,8 +15,10 @@ public class Main {
         [ ] real machine registrai
         [x] atmintis 16x16
         [x] make instructions to work with 16x16 memory
-        [ ] TI registras
+        [x] TI registras
+        [ ] Make run and run till completion work properly
         [x] PTR redo
+        [ ] do something with MODE
         [ ] general memory pointer
         [ ] PI, SI???????????
 
