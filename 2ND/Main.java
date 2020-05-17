@@ -10,9 +10,11 @@ public class Main {
         Galetu padirbet and input faila, kai nera 4char komanda.
 
 
-        [ ] supervizorine, paging
+        [ ] supervizorine
+        [x] paging
         [ ] real machine registrai
-        [ ] atmintis 16x16
+        [x] atmintis 16x16
+        [x] make instructions to work with 16x16 memory
         [ ] TI registras
         [ ] PTR redo
         [ ] general memory pointer

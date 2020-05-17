@@ -7,7 +7,7 @@ public class Memory{
     private volatile ArrayList<Word> mem = new ArrayList<Word>();
 
     public Memory(){
-        for(int i = 0; i < 256; i++){
+        for(int i = 0; i < 16; i++){
             Word word = new Word();
             word = Word.stringToWord("0000");
             mem.add(word);
@@ -21,19 +21,19 @@ public class Memory{
     }
 
     public void printAllNicely(int start){
-        start = start * 16 * 16;
+        start = start * 16;
         String temp;
-        for(int i = 0; i < 16; i++){
-            temp = Integer.toHexString(i * 16 + start);
-            while(temp.length() < 3){
-                temp = "0" + temp;
-            }
-            System.out.print(temp + " ");
-            for(int j = 0; j < 16; j++){
-                System.out.print(Word.wordToString(mem.get(i * 16  + j)) + " ");
-            }
-            System.out.println("");
+       // for(int i = 0; i < 16; i++){
+        temp = Integer.toHexString(start);
+        while(temp.length() < 3){
+            temp = "0" + temp;
         }
+        System.out.print(temp + " ");
+        for(int j = 0; j < 16; j++){
+            System.out.print(Word.wordToString(mem.get(j)) + " ");
+        }
+        System.out.println("");
+      //  }
     }
 
     public Word getInstruction(int Cc){
@@ -85,7 +85,7 @@ public class Memory{
         return -1;
     }
 
-    public int loadToMemory(String fileName) {
+    public int loadToMemory(String fileName, int startPoint) {
         File file = new File(fileName);
         int cc = 0;
         int i = 0;
@@ -93,7 +93,20 @@ public class Memory{
         int segmentFlag = 0; //DATA CODE HALT
         try {
             scanner = new Scanner(file);
-            while(scanner.hasNextLine()){
+            while(startPoint != 0){
+                startPoint -= 1;
+                String data = scanner.nextLine();
+                //System.out.println(data);
+                if(data.equals("DATA")){
+                    segmentFlag = 1;
+                    continue;
+                }
+                if(data.equals("CODE")){
+                    segmentFlag = 2;
+                    continue;
+                }
+            }
+            while(scanner.hasNextLine() && i < 16){
                 String data = scanner.nextLine();
                 data = data.toUpperCase();
                 
@@ -128,6 +141,9 @@ public class Memory{
                 }
             }
             scanner.close();
+            if(i > 15){
+                return -1;
+            }
             return cc;
 
         } catch (FileNotFoundException e) {
@@ -135,5 +151,8 @@ public class Memory{
             e.printStackTrace();
         }
         return -1;
+    }
+    public int getSize(){
+        return mem.size();
     }
 }

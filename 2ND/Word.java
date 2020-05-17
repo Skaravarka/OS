@@ -84,4 +84,11 @@ public class Word {
         }
         return tempString;
     }
+    public static String numberPadding(int num){
+        String temp = Integer.toString(num);
+        while(temp.length() < 4){
+            temp = " " + temp;
+        }
+        return temp;
+    }
 }
