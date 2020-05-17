@@ -10,20 +10,20 @@ import java.util.Random;
     // 0
 
 public class RealMachine implements Runnable {
-
+    ArrayList<Supervisor> supervisorMemory = new ArrayList<Supervisor>();
     ArrayList<Memory> allMemory = new ArrayList<Memory>();
     ArrayList<VirtualMachine> VMList = new ArrayList<VirtualMachine>();
     private Thread consoleInputsThread;
     private ConsoleInputs consoleInputs;
     private Thread consoleOutputThread;
     private ConsoleOutput consoleOutputs;
-    private int DEFAULTTI = 50;
+    private int DEFAULTTI = 100;
+    private int TIMERCOMMAND = 2;
+    private int TIMERINTERUPT = 3;
     private boolean mode = false;
     private int TI = 0;
     //private int[] ptr = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
-    private int[] ptr = { 0, 0, 0, 0, 0, 0, 
-                          0, 0, 0, 0, 0, 0, 
-                          0, 0, 0}; 
+    private int ptr = 0; 
     private int sf = 0;
     private int ax = 0;  // darbinis
     private int bx = 0;  // darbinis
@@ -32,6 +32,10 @@ public class RealMachine implements Runnable {
     private int chr = 0; // kanalu valdymo
     private int cc = 0;  // virtualios masinos komandu
     private int dc = 0;  // duomenu skaitliukas
+    private boolean[] ml = {false, false, false, false, 
+                            false, false, false, false, 
+                            false, false, false, false, 
+                            false, false, false, false };
     private boolean[] mp = {false, false, false, false, 
                             false, false, false, false, 
                             false, false, false, false, 
@@ -104,8 +108,8 @@ public class RealMachine implements Runnable {
     }
     private int getRandomMemoryBlock(){
         int count = 0;
-        for(int i = 0; i < ptr.length; i++){
-            if(ptr[i] == 0){
+        for(int i = 0; i < ml.length; i++){
+            if(ml[i] == false){
                 count++;
             }
         }
@@ -114,10 +118,10 @@ public class RealMachine implements Runnable {
         }
         Random rand = new Random();
         int a = rand.nextInt(allMemory.size() - 1);
-        while(ptr[a] == 1){
+        while(ml[a] == true){
             a = rand.nextInt(allMemory.size() - 1);
         }
-        ptr[a] = 1;
+        ml[a] = true;
         printToConsole("");
         return a;
     }
@@ -146,21 +150,21 @@ public class RealMachine implements Runnable {
     private int getSomeMemoryBlock(){
         int num = -1;
         printToConsole("Free memories:");
-        for(int i = 0; i < ptr.length; i++){
-            if(ptr[i] == 0){
+        for(int i = 0; i < ml.length; i++){
+            if(ml[i] == false){
                 System.out.print(i + " ");
             }
         }
         printToConsole("");
         while(true){
             num = Integer.parseInt(getConsoleCommand());
-            if(num >= 0 && num < ptr.length){
-                if(ptr[num] == 0){
+            if(num >= 0 && num < ml.length){
+                if(ml[num] == false){
                     break;
                 }
             }
         }
-        ptr[num] = 1;
+        ml[num] = true;
 
         return num;
     }
@@ -302,17 +306,14 @@ public class RealMachine implements Runnable {
     }
     private void runVirtualMachines(){
         for(int i = 0; i < VMList.size(); i++){
-            for(TI = 0; TI < DEFAULTTI; TI++){
-                if(!isFinished(i)){
-                    printToConsole("Doing a step, executing line: "+(VMList.get(i).getCc()+1));
-                    doStep(i); 
-                }
-                else break;
+            if(!isFinished(i)){
+                printToConsole("Doing a step, executing line: "+(VMList.get(i).getCc()+1));
+                doStep(i); 
             }
+            else break;
         }
     }
     private void runVirtualMachineTillCompletion(){
-    
         for(int i = 0; i < VMList.size(); i++){
             for(TI = 0; TI < DEFAULTTI; TI++){
                 if(!isFinished(i)){
@@ -352,6 +353,7 @@ public class RealMachine implements Runnable {
         executeCommand(VMNum);
         processInterupts(VMNum);
         processErrors();
+        processRegisters(VMNum);
     }
     public boolean isFinished(int VMNum){
         if(paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc()).equals("HALT")){
@@ -473,7 +475,11 @@ public class RealMachine implements Runnable {
         VMList.get(VMnum).setMp(ax);
     }
     private void processInterupts(int VMnum){
+        TI = TI - 1;
         switch(ii){
+            case 0:
+                TI = TI + 1;
+                break;
             case 1:
                 printToConsole(Integer.toString(VMList.get(VMnum).getAx()));
                 ii = 0;
@@ -537,6 +543,13 @@ public class RealMachine implements Runnable {
                 break;
         }
     }
+    private void processRegisters(int VMNum){
+        ax = VMList.get(VMNum).getAx();
+        bx = VMList.get(VMNum).getBx();
+        cc = VMList.get(VMNum).getCc();
+        ptr = VMList.get(VMNum).getPtr();
+        sf = VMList.get(VMNum).getSf();
+    }
     private void printMemory(){
         for(int i = 0; i < allMemory.size(); i++){
             allMemory.get(i).printAllNicely(i);
@@ -575,6 +588,8 @@ public class RealMachine implements Runnable {
         System.out.print(ei);
     }
     public void executeCommand(int VMNum){
+
+        TI = TI - TIMERCOMMAND;
 
         if(paging(VMList.get(VMNum).getPtr(), VMList.get(VMNum).getCc()).equals("HALT")){
             return;

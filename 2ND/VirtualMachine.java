@@ -49,6 +49,7 @@ public class VirtualMachine {
         System.out.println("CC: "+this.cc);
         System.out.println("SF: "+this.sf);
         System.out.println("MP: "+this.mp);
+        System.out.println("PTR: "+this.ptr);
     }
 
     public void setAx(int ax){

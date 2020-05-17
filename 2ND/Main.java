@@ -16,7 +16,7 @@ public class Main {
         [x] atmintis 16x16
         [x] make instructions to work with 16x16 memory
         [ ] TI registras
-        [ ] PTR redo
+        [x] PTR redo
         [ ] general memory pointer
         [ ] PI, SI???????????
 
