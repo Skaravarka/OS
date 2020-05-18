@@ -384,10 +384,12 @@ public class RealMachine implements Runnable {
     public void doStep(int VMNum){
         printToConsole("Doing Vm nr:"+VMNum+" step");
         executeCommand(VMNum);
-        if(TI < 0)
-            ii = 11;
         processInterupts(VMNum);
         processErrors();
+        if(TI < 0){
+            ii = 11;
+            processInterupts(VMNum);
+        }
         processRegisters(VMNum);
     }
     public boolean isFinished(int VMNum){
@@ -464,6 +466,24 @@ public class RealMachine implements Runnable {
             VMList.get(VMnum).setBx(number);
         }
     }
+    private void handleLGD(int VMnum){// lock general memory
+        if(ax>15){
+            return;
+        } 
+        if(!mp[ax]){
+            mp[ax] = true;
+            VMList.get(VMnum).setMp(ax);
+        }
+        else ei = 1;
+        
+    }
+    private void handleUGD(int VMnum){ // unlock general memory
+        if(ax>15){
+            return;
+        }
+        mp[ax] = false;
+        VMList.get(VMnum).setMp(ax);
+    }
     private boolean checkCell(int cell, int VMNum){
         int a = 0;
         while(cell>16){
@@ -502,24 +522,6 @@ public class RealMachine implements Runnable {
             }
         }
         System.out.println();
-    }
-    private void handleLGD(int VMnum){// lock general memory
-        if(ax>15){
-            return;
-        } 
-        if(!mp[ax]){
-            mp[ax] = true;
-            VMList.get(VMnum).setMp(ax);
-        }
-        else ei = 1;
-        
-    }
-    private void handleUGD(int VMnum){ // unlock general memory
-        if(ax>15){
-            return;
-        }
-        mp[ax] = false;
-        VMList.get(VMnum).setMp(ax);
     }
     private void processInterupts(int VMnum){
         TI = TI - 1;
@@ -622,8 +624,12 @@ public class RealMachine implements Runnable {
         System.out.print(" |PTR: ");
         System.out.print(ptr);
         System.out.print(" |MP: ");
-        System.out.print(mp);
-        printToConsole("");
+        for(int i = 0;i < mp.length; i++){
+            if(mp[i] == false)
+                System.out.print(0);
+            else System.out.print(1);
+        }
+        System.out.println();
         System.out.print("AX: ");
         System.out.print(ax);
         System.out.print(" |BX: ");
@@ -636,6 +642,13 @@ public class RealMachine implements Runnable {
         System.out.print(chr);
         System.out.print(" |EI: ");
         System.out.print(ei);
+        System.out.print(" |ML: ");
+        for(int i = 0;i < mp.length; i++){
+            if(ml[i] == false)
+                System.out.print(0);
+            else System.out.print(1);
+        }
+        System.out.println();
     }
     public void executeCommand(int VMNum){
 
