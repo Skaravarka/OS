@@ -17,12 +17,12 @@ public class Main {
         [x] make instructions to work with 16x16 memory
         [x] TI registras
         [x] Make run
-        [ ] run till completion (optional)
+        [x] run till completion (optional)
         [x] PTR redo
         [ ] do something with MODE
-        [ ] general memory pointer
-        [ ] PI, SI???????????
-        [ ] print general memory
+        [x] general memory pointer
+        [ ] DI, SI(Source/Destination index)
+        [x] print general memory
 
 
     */
