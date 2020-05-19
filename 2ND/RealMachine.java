@@ -33,6 +33,7 @@ public class RealMachine implements Runnable {
     private int cc = 0;  // Code counter(VM)
     private int dc = 0;  // Data counter(VM)
     private int gs = 0;  // Generam memory segment
+    private int vmp = 0; // Virtual machine mp register
     private boolean[] ml = {false, false, false, false, 
                             false, false, false, false, 
                             false, false, false, false, 
