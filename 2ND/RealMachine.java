@@ -127,28 +127,6 @@ public class RealMachine implements Runnable {
         printToConsole("");
         return a;
     }
-    private void printVMMemory(){
-        printToConsole(" Available VMs:");
-        printVMlist();
-        int command = Integer.parseInt(getConsoleCommand());
-        printToConsole("Page list");
-        allMemory.get(VMList.get(command).getPtr()).printAllNicely(0);
-        printToConsole("Memory");
-        int i = 0;
-        while(Word.wordToString(allMemory.get(VMList.get(command).getPtr()).getInstruction(i)).trim().compareTo("0000") != 0){
-            allMemory.get(Integer.parseInt(Word.wordToString(allMemory.get(VMList.get(command).getPtr()).getInstruction(i)).trim())).printAllNicely(i);
-            i++;
-        }
-
-
-    }
-    private void printVmRegisters(){
-        printToConsole(" Available VMs:");
-        printVMlist();
-        int command = Integer.parseInt(getConsoleCommand());
-        printToConsole("Virtual machine nr: "+command+" registers:");
-        VMList.get(command).printAllRegisters();
-    }
     private int getSomeMemoryBlock(){
         int num = -1;
         printToConsole("Free memories:");
@@ -632,6 +610,28 @@ public class RealMachine implements Runnable {
             else System.out.print(1);
         }
         System.out.println();
+    }
+    private void printVMMemory(){
+        printToConsole(" Available VMs:");
+        printVMlist();
+        int command = Integer.parseInt(getConsoleCommand());
+        printToConsole("Page list");
+        allMemory.get(VMList.get(command).getPtr()).printAllNicely(0);
+        printToConsole("Memory");
+        int i = 0;
+        while(Word.wordToString(allMemory.get(VMList.get(command).getPtr()).getInstruction(i)).trim().compareTo("0000") != 0){
+            allMemory.get(Integer.parseInt(Word.wordToString(allMemory.get(VMList.get(command).getPtr()).getInstruction(i)).trim())).printAllNicely(i);
+            i++;
+        }
+
+
+    }
+    private void printVmRegisters(){
+        printToConsole(" Available VMs:");
+        printVMlist();
+        int command = Integer.parseInt(getConsoleCommand());
+        printToConsole("Virtual machine nr: "+command+" registers:");
+        VMList.get(command).printAllRegisters();
     }
     public void executeCommand(int VMNum){
 
@@ -1215,5 +1215,4 @@ public class RealMachine implements Runnable {
             printToConsole("Kaska neto ivedei");
             ei = 2;
     }
-
 }
