@@ -13,6 +13,7 @@ public class Supervisor{
     private int dc = 0; // duomenu skaitliukas
     private int ii = 0; // interupt'u
     private int ei = 0; // error'u
+    private int vmp = 0;
 
     public boolean isMode() {
         return this.mode;
@@ -118,13 +119,11 @@ public class Supervisor{
         this.ei = ei;
     }
 
-    public void save(int ax, int bx, int cc, int sf, int mp, int ptr){
-        this.ax = ax;
-        this.bx = bx;
-        this.cc = cc;
-        this.sf = sf;
-        this.ptr = ptr;
+    public void setVmp(int vmp){
+        this.vmp = vmp;
     }
 
-
+    public int getVmp() {
+        return vmp;
+    }
 }

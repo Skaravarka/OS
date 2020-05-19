@@ -32,7 +32,7 @@ public class RealMachine implements Runnable {
     private int chr = 0; // kanalu valdymo
     private int cc = 0;  // Code counter(VM)
     private int dc = 0;  // Data counter(VM)
-    private int gs = 0;  // Generam memory segment
+    private int gs = 0;  // General memory segment
     private int vmp = 0; // Virtual machine mp register
     private boolean[] ml = {false, false, false, false, 
                             false, false, false, false, 
@@ -192,6 +192,7 @@ public class RealMachine implements Runnable {
         supervisorMemory.get(a).setPtr(ptr);
         supervisorMemory.get(a).setSf(sf);
         supervisorMemory.get(a).setTI(TI);
+        supervisorMemory.get(a).setVmp(vmp);
         
         ax = supervisorMemory.get(b).getAx();
         bx = supervisorMemory.get(b).getBx();
@@ -206,6 +207,7 @@ public class RealMachine implements Runnable {
         sf = supervisorMemory.get(b).getSf();
         TI = supervisorMemory.get(b).getTI();
         mode = supervisorMemory.get(b).isMode();
+        vmp = supervisorMemory.get(b).getVmp();
 
     }
     private void loadToMemory(){
@@ -577,6 +579,7 @@ public class RealMachine implements Runnable {
         cc = VMList.get(VMNum).getCc();
         ptr = VMList.get(VMNum).getPtr();
         sf = VMList.get(VMNum).getSf();
+        vmp = VMList.get(VMNum).getMp();
     }
     private void printMemory(){
         for(int i = 0; i < allMemory.size(); i++){
@@ -601,6 +604,8 @@ public class RealMachine implements Runnable {
         System.out.print(dc);
         System.out.print(" |PTR: ");
         System.out.print(ptr);
+        System.out.print(" |VMP: ");
+        System.out.print(vmp);
         System.out.print(" |MP: ");
         for(int i = 0;i < mp.length; i++){
             if(mp[i] == false)
