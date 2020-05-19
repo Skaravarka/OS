@@ -21,7 +21,6 @@ public class Main {
         [x] PTR redo
         [ ] do something with MODE
         [x] general memory pointer
-        [ ] DI, SI(Source/Destination index)
         [x] print general memory
 
 

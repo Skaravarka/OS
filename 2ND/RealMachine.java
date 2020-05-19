@@ -18,7 +18,7 @@ public class RealMachine implements Runnable {
     private ConsoleInputs consoleInputs;
     private Thread consoleOutputThread;
     private ConsoleOutput consoleOutputs;
-    private int DEFAULTTI = 10;
+    private int DEFAULTTI = 30;
     private int TIMERCOMMAND = 2;
     private int TIMERINTERUPT = 3;
     private boolean mode = false;
@@ -346,7 +346,7 @@ public class RealMachine implements Runnable {
         }
         else {
             ii = 10;
-            processErrors();
+            processInterupts(activeMachine);
         }
     }
     private void runVirtualMachineTillCompletion(){

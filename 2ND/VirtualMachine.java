@@ -21,7 +21,7 @@ public class VirtualMachine {
         this.bx = 0;
         this.cc = 0;
         this.sf = 0;
-        this.mp = -1;
+        this.mp = 0;
     }
 
     public int getAx(){
